@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GreenShadow.Blog.DataAccess.Data;
-using GreenShadow.Blog.Domain.Models;
+using GreenShade.Blog.DataAccess.Data;
+using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace GreenShadow.Blog.Api
+namespace GreenShade.Blog.Api
 {
     public class Startup
     {

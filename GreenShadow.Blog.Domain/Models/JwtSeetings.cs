@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GreenShadow.Blog.Domain.Models
+namespace GreenShade.Blog.Domain.Models
 {
     public class JwtSeetings
     {

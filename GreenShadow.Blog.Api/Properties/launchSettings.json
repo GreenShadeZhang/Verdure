@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "GreenShadow.Blog.Api": {
+    "GreenShade.Blog.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/values",

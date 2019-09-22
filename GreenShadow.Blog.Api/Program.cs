@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace GreenShadow.Blog.Api
+namespace GreenShade.Blog.Api
 {
     public class Program
     {

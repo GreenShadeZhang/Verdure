@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GreenShadow.Blog.DataAccess.Data.Identity
+namespace GreenShade.Blog.DataAccess.Data.Identity
 {
     public partial class InitialIdentityModel : Migration
     {

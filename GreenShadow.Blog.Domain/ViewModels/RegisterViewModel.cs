@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace GreenShadow.Blog.Domain.ViewModels
+namespace GreenShade.Blog.Domain.ViewModels
 {
     public class RegisterViewModel
     {

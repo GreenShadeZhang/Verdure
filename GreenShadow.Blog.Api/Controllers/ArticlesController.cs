@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using GreenShadow.Blog.DataAccess.Data;
-using GreenShadow.Blog.Domain.Models;
+using GreenShade.Blog.DataAccess.Data;
+using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
-namespace GreenShadow.Blog.Api.Controllers
+namespace GreenShade.Blog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

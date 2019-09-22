@@ -5,8 +5,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using GreenShadow.Blog.Domain.Models;
-using GreenShadow.Blog.Domain.ViewModels;
+using GreenShade.Blog.Domain.Models;
+using GreenShade.Blog.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace GreenShadow.Blog.Api.Controllers
+namespace GreenShade.Blog.Api.Controllers
 {
     //[Route("api/[controller]")]
     [ApiController]

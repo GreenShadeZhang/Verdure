@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GreenShadow.Blog.Api.Controllers
+namespace GreenShade.Blog.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

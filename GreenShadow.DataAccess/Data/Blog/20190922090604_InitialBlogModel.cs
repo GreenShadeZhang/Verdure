@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GreenShadow.Blog.DataAccess.Data.Blog
+namespace GreenShade.Blog.DataAccess.Data.Blog
 {
     public partial class InitialBlogModel : Migration
     {

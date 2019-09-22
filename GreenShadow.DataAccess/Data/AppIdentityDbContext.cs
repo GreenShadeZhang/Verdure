@@ -1,11 +1,11 @@
-﻿using GreenShadow.Blog.Domain.Models;
+﻿using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GreenShadow.Blog.DataAccess.Data
+namespace GreenShade.Blog.DataAccess.Data
 {
     public class AppIdentityDbContext : IdentityDbContext<ApplicationUser>
     {
