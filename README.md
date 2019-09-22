@@ -1,4 +1,4 @@
-# myblogapi
+# MyBlogApi
 这是一个我的blog api项目。
 # 跟微软的一个官方教程学习的，将项目分为三个，GreenShade.Blog.Domain主要为model相关的东西，GreenShade.Blog.DataAccess为数据库操作相关的东西。
 # GreenShade.Blog.Api为api项目，jwt结合identity相关的api和用ef core对数据库进行操作，jwt授权接口，算是把从网友哪里抄的代码都是整合到一起了。
