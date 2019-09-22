@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenShadow.Blog.Domain\GreenShade.Blog.Domain.csproj" />
-    <ProjectReference Include="..\GreenShadow.DataAccess\GreenShade.Blog.DataAccess.csproj" />
+    <ProjectReference Include="..\GreenShade.Blog.Domain\GreenShade.Blog.Domain.csproj" />
+    <ProjectReference Include="..\GreenShade.DataAccess\GreenShade.Blog.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

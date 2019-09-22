@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShade.Blog.DataAccess", "GreenShadow.DataAccess\GreenShade.Blog.DataAccess.csproj", "{BFEF28FC-F509-4510-B471-43ABD93CF139}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShade.Blog.DataAccess", "GreenShade.DataAccess\GreenShade.Blog.DataAccess.csproj", "{BFEF28FC-F509-4510-B471-43ABD93CF139}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShade.Blog.Domain", "GreenShadow.Blog.Domain\GreenShade.Blog.Domain.csproj", "{C1ED46B2-88C1-4693-A85B-BE195FB1259A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShade.Blog.Domain", "GreenShade.Blog.Domain\GreenShade.Blog.Domain.csproj", "{C1ED46B2-88C1-4693-A85B-BE195FB1259A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShade.Blog.Api", "GreenShadow.Blog.Api\GreenShade.Blog.Api.csproj", "{45F598AD-560B-4A71-BEA8-09C41254434E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenShade.Blog.Api", "GreenShade.Blog.Api\GreenShade.Blog.Api.csproj", "{45F598AD-560B-4A71-BEA8-09C41254434E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
