@@ -70,7 +70,7 @@ namespace GreenShade.Blog.Api.Controllers
         public async Task<IActionResult> Register([FromForm]RegisterViewModel model)
         {
 
-            var userInfo = new ApplicationUser { UserName = model.Email, Email = model.Email, SecurityStamp = "FS" };
+            var userInfo = new ApplicationUser {NickName=model.NickName, UserName = model.Email, Email = model.Email, SecurityStamp = "FS" };
             var result = await _userManager.CreateAsync(userInfo, model.Password);
             if (result.Succeeded)
             {

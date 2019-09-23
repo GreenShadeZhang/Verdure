@@ -14,5 +14,6 @@ namespace GreenShade.Blog.Domain.Models
     [Table("AspNetUsers")]
     public class ApplicationUser:IdentityUser
     {
+        public string NickName { get; set; }
     }
 }

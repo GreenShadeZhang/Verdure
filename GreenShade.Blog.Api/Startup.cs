@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GreenShade.Blog.DataAccess.Data;
+using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -42,6 +43,7 @@ namespace GreenShade.Blog.Api
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
 
+            services.AddScoped<ArticleService>();
             var jwtSeetings = new JwtSeetings();
             //绑定jwtSeetings
             Configuration.Bind("JwtSeetings", jwtSeetings);
