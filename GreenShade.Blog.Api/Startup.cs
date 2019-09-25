@@ -1,23 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using GreenShade.Blog.DataAccess.Data;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GreenShade.Blog.Api
@@ -33,13 +26,12 @@ namespace GreenShade.Blog.Api
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {        
+        {
             services.AddDbContext<AppIdentityDbContext>(options =>
               options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
             services.AddDbContext<BlogContext>(options =>
             options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
-             .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
 
@@ -74,18 +66,24 @@ namespace GreenShade.Blog.Api
                 });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllers();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }
