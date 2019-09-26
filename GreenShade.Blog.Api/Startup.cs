@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,10 +26,16 @@ namespace GreenShade.Blog.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<AppIdentityDbContext>(options =>
+            //  options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
+            //services.AddDbContext<BlogContext>(options =>
+            //options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
+
+            ///
             services.AddDbContext<AppIdentityDbContext>(options =>
-              options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<BlogContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
@@ -78,6 +83,7 @@ namespace GreenShade.Blog.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

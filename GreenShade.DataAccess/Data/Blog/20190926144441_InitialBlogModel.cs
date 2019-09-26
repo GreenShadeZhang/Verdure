@@ -6,7 +6,8 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
     public partial class InitialBlogModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
-        {           
+        {
+         
             migrationBuilder.CreateTable(
                 name: "Articles",
                 columns: table => new
@@ -24,7 +25,7 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
                 {
                     table.PrimaryKey("PK_Articles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Articles_ApplicationUser_UserId",
+                        name: "FK_Articles_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -42,8 +43,6 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
             migrationBuilder.DropTable(
                 name: "Articles");
 
-            migrationBuilder.DropTable(
-                name: "ApplicationUser");
         }
     }
 }

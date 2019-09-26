@@ -48,7 +48,7 @@ namespace GreenShade.Blog.DataAccess.Services
         public async Task PostArticle(Article article)
         {
             article.ArticleDate = DateTime.UtcNow;
-            _context.Articles.Add(article);
+            await _context.Articles.AddAsync(article);
             await _context.SaveChangesAsync();
         }
 

@@ -7,6 +7,7 @@ namespace GreenShade.Blog.Domain.Models
 {
    public class Article
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
         public string UserId { get; set; }
         public string Title { get; set; }
