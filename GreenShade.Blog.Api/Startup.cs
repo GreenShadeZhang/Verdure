@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using GreenShade.Blog.Api.Hubs;
 using GreenShade.Blog.DataAccess.Data;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Models;
@@ -67,10 +68,11 @@ namespace GreenShade.Blog.Api
                     builder.AllowAnyOrigin() //允许任何来源的主机访问
                     .AllowAnyMethod()
                     .AllowAnyHeader()
+                    .WithOrigins("http://localhost:4200")
                     .AllowCredentials();//指定处理cookie
                 });
             });
-
+            services.AddSignalR();
             services.AddControllers();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,15 +82,16 @@ namespace GreenShade.Blog.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+          
             app.UseRouting();
-
+            app.UseCors("any");
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
-            {
+            {               
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }
