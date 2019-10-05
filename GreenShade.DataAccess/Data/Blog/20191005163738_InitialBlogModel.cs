@@ -7,9 +7,10 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-         
+           
+
             migrationBuilder.CreateTable(
-                name: "Articles",
+                name: "Article",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -23,9 +24,9 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.PrimaryKey("PK_Article", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Articles_AspNetUsers_UserId",
+                        name: "FK_Article_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -33,16 +34,18 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_UserId",
-                table: "Articles",
+                name: "IX_Article_UserId",
+                table: "Article",
                 column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Articles");
+                name: "Article");
 
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

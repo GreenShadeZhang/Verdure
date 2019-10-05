@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GreenShade.Blog.DataAccess.Data.Blog
 {
     [DbContext(typeof(BlogContext))]
-    [Migration("20190926144441_InitialBlogModel")]
+    [Migration("20191005163738_InitialBlogModel")]
     partial class InitialBlogModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,7 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
             modelBuilder.Entity("GreenShade.Blog.Domain.Models.Article", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ArticleCommentCount")
@@ -106,7 +107,7 @@ namespace GreenShade.Blog.DataAccess.Data.Blog
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Articles");
+                    b.ToTable("Article");
                 });
 
             modelBuilder.Entity("GreenShade.Blog.Domain.Models.Article", b =>

@@ -37,7 +37,7 @@ namespace GreenShade.Blog.Api.Controllers
 
         // POST: /Account/SignIn
         [HttpPost("account/login")]
-        public async Task<IActionResult> SignIn([FromForm]LoginViewModel model)
+        public async Task<IActionResult> SignIn([FromBody]LoginViewModel model)
         {
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
             if (result.Succeeded)

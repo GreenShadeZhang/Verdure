@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using GreenShade.Blog.Api.Hubs;
 using GreenShade.Blog.DataAccess.Data;
 using GreenShade.Blog.DataAccess.Services;
@@ -33,9 +36,12 @@ namespace GreenShade.Blog.Api
             //options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
 
             ///
+            services.AddSignalR();
             services.AddDbContext<AppIdentityDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<BlogContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ChatContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
@@ -59,8 +65,21 @@ namespace GreenShade.Blog.Api
                     ValidAudience = jwtSeetings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSeetings.SecretKey))
                 };
-            })
-            ;
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (context.HttpContext.WebSockets.IsWebSocketRequest || context.Request.Headers["Accept"] == "text/event-stream"))
+                        {
+                            context.Token = context.Request.Query["access_token"];
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
             services.AddCors(options =>
             {
                 options.AddPolicy("any", builder =>
@@ -72,7 +91,7 @@ namespace GreenShade.Blog.Api
                     .AllowCredentials();//指定处理cookie
                 });
             });
-            services.AddSignalR();
+
             services.AddControllers();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -82,12 +101,11 @@ namespace GreenShade.Blog.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-          
-            app.UseRouting();
             app.UseCors("any");
+            app.UseWebSockets();
+            app.UseRouting();          
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {               
                 endpoints.MapControllers();
