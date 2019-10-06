@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using GreenShade.Blog.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ namespace GreenShade.Blog.Api.Hubs
     [Authorize]
     public class ChatHub:Hub
     {
+        private readonly ChatContext _context;
+
         public Task SendMessage(string chatMessage)
         {
             var asb = Context.ConnectionId;
@@ -14,6 +17,11 @@ namespace GreenShade.Blog.Api.Hubs
 
         }
 
+
+        public ChatHub(ChatContext context)
+        {
+            this._context = context;
+        }
 
         public override Task OnConnectedAsync()
         {
@@ -42,9 +50,10 @@ namespace GreenShade.Blog.Api.Hubs
             return Clients.Client(connectionId).SendAsync("Send", $"Private message from {name}: {message}");
         }
 
-        public Task SendToGroup(string groupName, string name, string message)
+        public async Task SendToGroup(string groupName, string message)
         {
-            return Clients.Group(groupName).SendAsync("Send", $"{name}@{groupName}: {message}");
+            var chatGroup = await _context.Groups.FindAsync(groupName);
+            await Clients.Group(groupName).SendAsync("GroupRecv", $"{Context.User.Identity.Name}@{chatGroup.Title}: {message}");
         }
 
         public Task SendToOthersInGroup(string groupName, string name, string message)
@@ -52,11 +61,12 @@ namespace GreenShade.Blog.Api.Hubs
             return Clients.OthersInGroup(groupName).SendAsync("Send", $"{name}@{groupName}: {message}");
         }
 
-        public async Task JoinGroup(string groupName, string name)
+        public async Task JoinGroup(string groupName)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            var chatGroup = await _context.Groups.FindAsync(groupName);
 
-            await Clients.Group(groupName).SendAsync("Send", $"{name} joined {groupName}");
+            await Clients.Group(groupName).SendAsync("GroupSend", $"{Context.User.Identity.Name} joined {chatGroup.Title}");
         }
 
         public async Task LeaveGroup(string groupName, string name)
