@@ -16,18 +16,21 @@ namespace GreenShade.Blog.Api.Controllers
     [ApiController]
     public class AppletController : ControllerBase
     {
-        public AppletController(IConfiguration configuration)
+        public AppletController(IConfiguration configuration, PushWnsService pushWnsService, WallpaperService wallpaperService)
         {
+            PushWnsService = pushWnsService;
             Configuration = configuration;
+            WallpaperService = wallpaperService;
         }
+        public WallpaperService WallpaperService { get; }
         public IConfiguration Configuration { get; }
+        public PushWnsService PushWnsService { get; }
         // GET: api/Bing
         [HttpGet]
         public async Task<ActionResult> GetBing()
         {
             List<WallpapersDetail> picModels = new List<WallpapersDetail>();
-            WallpaperService wallpaperService = new WallpaperService();
-            WallpapersData wallPaperModel = await wallpaperService.GetWallparper(0, 6);
+            WallpapersData wallPaperModel = await WallpaperService.GetWallparper(0, 6);
             //通过重新组装成集合给GridView
             foreach (var item in wallPaperModel.images)
             {
@@ -69,16 +72,29 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
 
-        //// PUT: api/Bing/5
-        //[HttpGet]
-        //public void PostChannel()
-        //{
-        //    string sid = "ms-app://s-1-15-2-73882458-3227807263-4067040658-804817547-1359916503-4130225270-1080480494";
-        //    string sre = "yzs1CsGxtWzNH323PO7ieLdduBJ/3OX6";
-        //    string xmlt = "";
-        //    string channel = Configuration.GetConnectionString("UrlChannel");
-        //    string res = PushWnsService.PostToWns(sre, sid, channel, xmlt, "wns/toast", "text/xml");
-        //}
+
+        [HttpGet]
+        public string PostChannel()
+        {
+            string uri = "https://sg2p.notify.windows.com/?token=AwYAAADQCl9EgOdsNvLepNi8wZchyME9K0uTnM8NsEa0xdXj23E0ez1fCVoD0OiFUJiyUhxSEO%2b33J%2bV7ns%2fEJEYOuga%2fYnjfWAgjpLqJYW7h0HVDybrUmniAisYH5yR9jr2bSrcCmv%2f7nbMXTlIaGbc2mGb";
+            string secret = "secret";
+            string sid = "sid";
+            string notificationType = "wns/toast";
+            string contentType = "text/xml";
+            string content =@"
+<toast>
+<visual>
+    <binding template='ToastGeneric'>
+      <image placement='appLogoOverride' hint-crop='circle' src='https://unsplash.it/64?image=669'/>
+      <text>Adam Wilson tagged you in a photo</text>
+      <text>On top of McClellan Butte - with Andrew Bares</text>
+      <image src='https://unsplash.it/360/202?image=883'/>
+    </binding>
+  </visual>
+</toast>";
+            string res = PushWnsService.PostToWns(secret, sid, uri, content, notificationType, contentType);
+            return res;
+        }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)

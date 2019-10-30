@@ -48,6 +48,8 @@ namespace GreenShade.Blog.Api
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
 
             services.AddScoped<ArticleService>();
+            services.AddScoped<WallpaperService>();
+            services.AddScoped<PushWnsService>();
             var jwtSeetings = new JwtSeetings();
             //绑定jwtSeetings
             Configuration.Bind("JwtSeetings", jwtSeetings);
