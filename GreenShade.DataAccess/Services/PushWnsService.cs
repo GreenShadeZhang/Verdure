@@ -24,12 +24,12 @@ namespace GreenShade.Blog.DataAccess.Services
     public class PushWnsService
     {
         // Post to WNS
-        public async Task<string> PostToWns(string secret, string sid, string uri, string xml, string notificationType, string contentType)
+        public async Task<string> PostToWnsAsync(string secret, string sid, string uri, string xml, string notificationType, string contentType)
         {
             try
             {
                 // You should cache this access token.
-                var accessToken = await GetAccessToken(secret, sid);
+                var accessToken = await GetAccessTokenAsync(secret, sid);
 
                 byte[] contentInBytes = Encoding.UTF8.GetBytes(xml);
 
@@ -58,10 +58,10 @@ namespace GreenShade.Blog.DataAccess.Services
                     // Because your cached access token expires after 24 hours, you can expect to get 
                     // this response from WNS at least once a day.
 
-                    await GetAccessToken(secret, sid);
+                    await GetAccessTokenAsync(secret, sid);
 
                     // We recommend that you implement a maximum retry policy.
-                    string x = await PostToWns(uri, xml, secret, sid, notificationType, contentType);
+                    string x = await PostToWnsAsync(uri, xml, secret, sid, notificationType, contentType);
                     return x;
                 }
                 else if (status == HttpStatusCode.Gone || status == HttpStatusCode.NotFound)
@@ -134,7 +134,7 @@ namespace GreenShade.Blog.DataAccess.Services
             }
         }
 
-        protected async Task<OAuthToken> GetAccessToken(string secret, string sid)
+        protected async Task<OAuthToken> GetAccessTokenAsync(string secret, string sid)
         {
             IDictionary<string, string> keyValues = new Dictionary<string, string>()
             {

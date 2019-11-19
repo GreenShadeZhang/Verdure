@@ -92,7 +92,7 @@ namespace GreenShade.Blog.Api.Controllers
     </binding>
   </visual>
 </toast>";
-            string res =await PushWnsService.PostToWns(secret, sid, uri, content, notificationType, contentType);
+            string res =await PushWnsService.PostToWnsAsync(secret, sid, uri, content, notificationType, contentType);
             return res;
         }
         // DELETE: api/ApiWithActions/5
