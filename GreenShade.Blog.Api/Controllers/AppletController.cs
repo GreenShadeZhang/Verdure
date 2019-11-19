@@ -74,7 +74,7 @@ namespace GreenShade.Blog.Api.Controllers
 
 
         [HttpGet]
-        public string PostChannel()
+        public async Task<string> PostChannel()
         {
             string uri = "https://sg2p.notify.windows.com/?token=AwYAAADQCl9EgOdsNvLepNi8wZchyME9K0uTnM8NsEa0xdXj23E0ez1fCVoD0OiFUJiyUhxSEO%2b33J%2bV7ns%2fEJEYOuga%2fYnjfWAgjpLqJYW7h0HVDybrUmniAisYH5yR9jr2bSrcCmv%2f7nbMXTlIaGbc2mGb";
             string secret = "secret";
@@ -92,7 +92,7 @@ namespace GreenShade.Blog.Api.Controllers
     </binding>
   </visual>
 </toast>";
-            string res = PushWnsService.PostToWns(secret, sid, uri, content, notificationType, contentType);
+            string res =await PushWnsService.PostToWns(secret, sid, uri, content, notificationType, contentType);
             return res;
         }
         // DELETE: api/ApiWithActions/5

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace GreenShade.Blog.DataAccess.Services
@@ -22,12 +24,12 @@ namespace GreenShade.Blog.DataAccess.Services
     public class PushWnsService
     {
         // Post to WNS
-        public string PostToWns(string secret, string sid, string uri, string xml, string notificationType, string contentType)
+        public async Task<string> PostToWns(string secret, string sid, string uri, string xml, string notificationType, string contentType)
         {
             try
             {
                 // You should cache this access token.
-                var accessToken = GetAccessToken(secret, sid);
+                var accessToken = await GetAccessToken(secret, sid);
 
                 byte[] contentInBytes = Encoding.UTF8.GetBytes(xml);
 
@@ -56,10 +58,11 @@ namespace GreenShade.Blog.DataAccess.Services
                     // Because your cached access token expires after 24 hours, you can expect to get 
                     // this response from WNS at least once a day.
 
-                    GetAccessToken(secret, sid);
+                    await GetAccessToken(secret, sid);
 
                     // We recommend that you implement a maximum retry policy.
-                    return PostToWns(uri, xml, secret, sid, notificationType, contentType);
+                    string x = await PostToWns(uri, xml, secret, sid, notificationType, contentType);
+                    return x;
                 }
                 else if (status == HttpStatusCode.Gone || status == HttpStatusCode.NotFound)
                 {
@@ -131,23 +134,24 @@ namespace GreenShade.Blog.DataAccess.Services
             }
         }
 
-        protected OAuthToken GetAccessToken(string secret, string sid)
+        protected async Task<OAuthToken> GetAccessToken(string secret, string sid)
         {
-            var urlEncodedSecret = HttpUtility.UrlEncode(secret);
-            var urlEncodedSid = HttpUtility.UrlEncode(sid);
-
-            var body = String.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com",
-                                     urlEncodedSid,
-                                     urlEncodedSecret);
-
-            string response;
-            using (var client = new WebClient())
+            IDictionary<string, string> keyValues = new Dictionary<string, string>()
             {
-                client.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-                response = client.UploadString("https://login.live.com/accesstoken.srf", body);
+                {"grant_type","client_credentials" },
+                {"client_id",sid },
+                {"client_secret",secret },
+                {"scope","notify.windows.com" }
+            };
+            var postContent = new FormUrlEncodedContent(keyValues);
+            string response;
+            using (var httpClient = new HttpClient())
+            {
+                var responseMessage = httpClient.PostAsync("https://login.live.com/accesstoken.srf", postContent);
+                response = await responseMessage.Result.Content.ReadAsStringAsync();
             }
             return GetOAuthTokenFromJson(response);
         }
-        
+
     }
 }
