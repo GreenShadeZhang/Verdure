@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Dto;
+using System.IO;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -27,7 +28,7 @@ namespace GreenShade.Blog.Api.Controllers
 
         // GET: api/Articles
         [HttpGet]
-        public async Task<ActionResult<List<ArticleDto>>> GetArticles(int pi=1,int ps=10)
+        public async Task<ActionResult<List<ArticleDto>>> GetArticles(int pi = 1, int ps = 10)
         {
             List<ArticleDto> ret = null;
             try
@@ -38,8 +39,8 @@ namespace GreenShade.Blog.Api.Controllers
                     var artList = await _context.GetArticles(pi, ps);
                     artList.ForEach(art => ret.Add(new ArticleDto(art)));
                 }
-                
-                
+
+
                 return Ok(ret);
             }
             catch (Exception ex)
@@ -65,7 +66,7 @@ namespace GreenShade.Blog.Api.Controllers
             return ret;
         }
 
-       
+
         // POST: api/Articles
         [Authorize]
         [HttpPost]
@@ -81,7 +82,7 @@ namespace GreenShade.Blog.Api.Controllers
                     }
                 }
             }
-           await _context.PostArticle(article);
+            await _context.PostArticle(article);
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }
 
@@ -89,13 +90,28 @@ namespace GreenShade.Blog.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Article>> DeleteArticle(string id)
         {
-          var article= await _context.DeleteArticle(id);
+            var article = await _context.DeleteArticle(id);
             return article;
         }
 
         private bool ArticleExists(string id)
         {
             return _context.ArticleExists(id);
+        }
+        [HttpPost]
+        [ActionName("ImportArticle")]
+        public async Task<ActionResult<Article>> ImportArticle()
+        {
+            // var request=HttpContext.Request;
+            var file = HttpContext.Request.Form.Files["id"];
+            var uploadFileBytes = new byte[file.Length];
+            file.OpenReadStream().Read(uploadFileBytes, 0, (int)file.Length);
+          string str=  System.Text.Encoding.Default.GetString(uploadFileBytes);
+            var dic=Directory.GetCurrentDirectory();
+          string localPath= Path.Combine(dic,file.FileName);
+            System.IO.File.WriteAllBytes(localPath,uploadFileBytes) ;
+            //Path.;
+            return null;
         }
     }
 }
