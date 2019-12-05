@@ -15,7 +15,7 @@ using System.IO;
 
 namespace GreenShade.Blog.Api.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]/[action]")]
     [ApiController]
     public class ArticlesController : ControllerBase
     {
@@ -27,7 +27,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
         // GET: api/Articles
-        [HttpGet]
+        [HttpGet("api/Articles")]
         public async Task<ActionResult<List<ArticleDto>>> GetArticles(int pi = 1, int ps = 10)
         {
             List<ArticleDto> ret = null;
@@ -51,7 +51,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
         // GET: api/Articles/5
-        [HttpGet("{id}")]
+        [HttpGet("api/Articles/{id}")]
         public async Task<ActionResult<ArticleDto>> GetArticle(string id)
         {
             var user = HttpContext.User;
@@ -69,7 +69,7 @@ namespace GreenShade.Blog.Api.Controllers
 
         // POST: api/Articles
         [Authorize]
-        [HttpPost]
+        [HttpPost("api/Articles")]
         public async Task<ActionResult<Article>> PostArticle([FromForm]Article article)
         {
             if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
@@ -98,20 +98,41 @@ namespace GreenShade.Blog.Api.Controllers
         {
             return _context.ArticleExists(id);
         }
-        [HttpPost]
-        [ActionName("ImportArticle")]
+        [HttpPost("api/Articles/ImportArticle")]
         public async Task<ActionResult<Article>> ImportArticle()
         {
-            // var request=HttpContext.Request;
             var file = HttpContext.Request.Form.Files["id"];
             var uploadFileBytes = new byte[file.Length];
             file.OpenReadStream().Read(uploadFileBytes, 0, (int)file.Length);
-          string str=  System.Text.Encoding.Default.GetString(uploadFileBytes);
-            var dic=Directory.GetCurrentDirectory();
-          string localPath= Path.Combine(dic,file.FileName);
-            System.IO.File.WriteAllBytes(localPath,uploadFileBytes) ;
+          string str= System.Text.Encoding.Default.GetString(uploadFileBytes);
+          //  var dic=Directory.GetCurrentDirectory();
+          //string localPath= Path.Combine(dic,file.FileName);
+          //  System.IO.File.WriteAllBytes(localPath,uploadFileBytes) ;
             //Path.;
-            return null;
+            if (!string.IsNullOrWhiteSpace(str))
+            {
+                Article article = new Article();
+                article.Content = str;
+                article.Title = file.FileName.Split(".")[0];
+                if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
+                {
+                    foreach (var item in HttpContext.User.Claims)
+                    {
+                        if (item.Type == ClaimTypes.NameIdentifier)
+                        {
+                            article.UserId = item.Value;
+                        }
+                    }
+                }
+                await _context.PostArticle(article);
+                return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+            }
+            else
+            {
+                return new JsonResult(new { msg = "导入失败" });
+            }
+           
+            
         }
     }
 }

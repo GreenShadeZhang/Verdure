@@ -34,8 +34,6 @@ namespace GreenShade.Blog.Api.Controllers
             _jwtSeetings = jwtSeetingsOptions.Value;
         }
 
-
-        // POST: /Account/SignIn
         [HttpPost("account/login")]
         public async Task<IActionResult> SignIn([FromBody]LoginViewModel model)
         {

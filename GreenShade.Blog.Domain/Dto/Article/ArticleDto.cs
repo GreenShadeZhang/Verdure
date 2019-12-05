@@ -32,8 +32,11 @@ namespace GreenShade.Blog.Domain.Dto
                 this.Content = article.Content;
                 this.Id = article.Id;
                 this.Title = article.Title;
-                this.UserId = article.UserId;
-                this.NickName = article.User.NickName;
+                if (article.User != null)
+                {
+                    this.UserId = article.UserId;
+                    this.NickName = article.User.NickName;
+                }
             }
         }
     }

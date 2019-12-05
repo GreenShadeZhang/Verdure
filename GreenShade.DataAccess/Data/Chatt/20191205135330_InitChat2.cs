@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GreenShade.Blog.DataAccess.Data.Chat
+namespace GreenShade.Blog.DataAccess.Data.Chatt
 {
-    public partial class InitialChatModel : Migration
+    public partial class InitChat2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
