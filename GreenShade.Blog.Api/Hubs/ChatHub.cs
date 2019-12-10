@@ -8,7 +8,7 @@ namespace GreenShade.Blog.Api.Hubs
     [Authorize]
     public class ChatHub:Hub
     {
-        private readonly ChatContext _context;
+        private readonly BlogSysContext _context;
 
         public Task SendMessage(string chatMessage)
         {
@@ -18,7 +18,7 @@ namespace GreenShade.Blog.Api.Hubs
         }
 
 
-        public ChatHub(ChatContext context)
+        public ChatHub(BlogSysContext context)
         {
             this._context = context;
         }

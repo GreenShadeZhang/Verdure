@@ -14,9 +14,9 @@ namespace GreenShade.Blog.Api.Controllers
     [ApiController]
     public class ChatGroupsController : ControllerBase
     {
-        private readonly ChatContext _context;
+        private readonly BlogSysContext _context;
 
-        public ChatGroupsController(ChatContext context)
+        public ChatGroupsController(BlogSysContext context)
         {
             _context = context;
         }

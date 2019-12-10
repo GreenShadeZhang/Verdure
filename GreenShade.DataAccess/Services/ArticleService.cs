@@ -11,9 +11,9 @@ namespace GreenShade.Blog.DataAccess.Services
 {
     public class ArticleService
     {
-        private readonly BlogContext _context;
+        private readonly BlogSysContext _context;
 
-        public ArticleService(BlogContext context)
+        public ArticleService(BlogSysContext context)
         {
             this._context = context;
         }

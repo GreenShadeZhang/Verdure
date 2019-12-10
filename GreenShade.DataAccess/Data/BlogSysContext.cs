@@ -6,12 +6,13 @@ using System.Text;
 
 namespace GreenShade.Blog.DataAccess.Data
 {
-    public class BlogContext:DbContext
+    public class BlogSysContext:DbContext
     {
         
-        public BlogContext(DbContextOptions<BlogContext> options):base(options)
+        public BlogSysContext(DbContextOptions<BlogSysContext> options):base(options)
         {
         }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<ChatGroup> Groups { get; set; }
     }
 }

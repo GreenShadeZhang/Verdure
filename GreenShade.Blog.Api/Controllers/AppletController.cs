@@ -27,7 +27,7 @@ namespace GreenShade.Blog.Api.Controllers
         public PushWnsService PushWnsService { get; }
         // GET: api/Bing
         [HttpGet]
-        public async Task<ActionResult> GetBing()
+        public async Task<ActionResult<List<WallpapersDetail>>> GetBing()
         {
             List<WallpapersDetail> picModels = new List<WallpapersDetail>();
             WallpapersData wallPaperModel = await WallpaperService.GetWallparper(0, 6);
@@ -40,7 +40,8 @@ namespace GreenShade.Blog.Api.Controllers
                     Source = "https://www.bing.com" + item.url
                 });
             }
-            return new JsonResult(picModels);
+            return picModels;
+           // return new JsonResult(picModels);
         }
 
         // GET: api/Bing/5

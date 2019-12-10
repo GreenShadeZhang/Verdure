@@ -30,24 +30,16 @@ namespace GreenShade.Blog.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+          
+
             services.AddDbContext<AppIdentityDbContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
-            services.AddDbContext<BlogContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
-            services.AddDbContext<ChatContext>(options =>
-            options.UseMySql(Configuration.GetConnectionString("OffLineMySqlCon")));
+            options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
+            services.AddDbContext<BlogSysContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
             ///
-            services.AddSignalR();
-            //services.AddDbContext<AppIdentityDbContext>(options =>
-            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDbContext<BlogContext>(options =>
-            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddDbContext<ChatContext>(options =>
-            //options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            //services.AddIdentity<ApplicationUser, IdentityRole>()
-            //    .AddEntityFrameworkStores<AppIdentityDbContext>();
+            services.AddSignalR();          
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
 
             services.AddScoped<ArticleService>();
