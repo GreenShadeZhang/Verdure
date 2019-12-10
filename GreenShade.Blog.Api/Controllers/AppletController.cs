@@ -25,7 +25,8 @@ namespace GreenShade.Blog.Api.Controllers
         public WallpaperService WallpaperService { get; }
         public IConfiguration Configuration { get; }
         public PushWnsService PushWnsService { get; }
-        // GET: api/Bing
+
+        [ActionName("bing")]
         [HttpGet]
         public async Task<ActionResult<List<WallpapersDetail>>> GetBing()
         {
@@ -41,10 +42,8 @@ namespace GreenShade.Blog.Api.Controllers
                 });
             }
             return picModels;
-           // return new JsonResult(picModels);
         }
 
-        // GET: api/Bing/5
         [HttpGet]
         public async Task<string> GetWeather(string city)
         {
@@ -55,7 +54,6 @@ namespace GreenShade.Blog.Api.Controllers
             return res;
         }
 
-        // GET: api/Bing/5
         [HttpGet]
         public async Task<string> GetCity(string location, string key)
         {
@@ -65,14 +63,6 @@ namespace GreenShade.Blog.Api.Controllers
             string res = await client.GetStringAsync(url);
             return res;
         }
-
-        // PUT: api/Bing/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-
 
         [HttpGet]
         public async Task<string> PostChannel()
@@ -95,11 +85,6 @@ namespace GreenShade.Blog.Api.Controllers
 </toast>";
             string res =await PushWnsService.PostToWnsAsync(secret, sid, uri, content, notificationType, contentType);
             return res;
-        }
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        }      
     }
 }

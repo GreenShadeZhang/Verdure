@@ -11,7 +11,7 @@ namespace GreenShade.Blog.Domain.Models
     /// 时间：2019-09-22
     /// 作者：Gil Zhang
     /// </summary>
-    //[Table("AspNetUsers")]
+    [Table("User")]
     public class ApplicationUser:IdentityUser
     {
         public string NickName { get; set; }

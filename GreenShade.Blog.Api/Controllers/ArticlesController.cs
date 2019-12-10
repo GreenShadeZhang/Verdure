@@ -15,7 +15,7 @@ using System.IO;
 
 namespace GreenShade.Blog.Api.Controllers
 {
-    //[Route("api/[controller]/[action]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ArticlesController : ControllerBase
     {
@@ -25,9 +25,8 @@ namespace GreenShade.Blog.Api.Controllers
         {
             _context = context;
         }
-
-        // GET: api/Articles
-        [HttpGet("api/Articles")]
+        [ActionName("arts")]
+        [HttpGet]
         public async Task<ActionResult<List<ArticleDto>>> GetArticles(int pi = 1, int ps = 10)
         {
             List<ArticleDto> ret = null;
@@ -50,8 +49,8 @@ namespace GreenShade.Blog.Api.Controllers
             return ret;
         }
 
-        // GET: api/Articles/5
-        [HttpGet("api/Articles/{id}")]
+        [ActionName("article_detail")]
+        [HttpGet]
         public async Task<ActionResult<ArticleDto>> GetArticle(string id)
         {
             var user = HttpContext.User;
@@ -67,9 +66,9 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
 
-        // POST: api/Articles
         [Authorize]
-        [HttpPost("api/Articles")]
+        [ActionName("create_article")]
+        [HttpPost]
         public async Task<ActionResult<Article>> PostArticle([FromForm]Article article)
         {
             if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
@@ -86,7 +85,6 @@ namespace GreenShade.Blog.Api.Controllers
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }
 
-        // DELETE: api/Articles/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Article>> DeleteArticle(string id)
         {
@@ -98,7 +96,9 @@ namespace GreenShade.Blog.Api.Controllers
         {
             return _context.ArticleExists(id);
         }
-        [HttpPost("api/Articles/ImportArticle")]
+        [Authorize]
+        [ActionName("import_article")]
+        [HttpPost]
         public async Task<ActionResult<Article>> ImportArticle()
         {
             var file = HttpContext.Request.Form.Files["id"];
