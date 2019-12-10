@@ -45,9 +45,9 @@ namespace GreenShade.Blog.Api.Controllers
             }
             catch (Exception ex)
             {
-
+                //return BadRequest();
             }
-            return BadRequest();
+            return ret;
         }
 
         // GET: api/Articles/5
