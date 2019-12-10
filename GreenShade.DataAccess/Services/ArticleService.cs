@@ -31,6 +31,21 @@ namespace GreenShade.Blog.DataAccess.Services
             return null;
         }
 
+        public async Task<int> GetArticlesNum()
+        {
+            int ret = 0;
+            try
+            {
+                ret = await _context.Articles.CountAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ret;
+        }
+
+
         public async Task<Article> GetArticle(string id)
         {
             var article = await _context.Articles.FindAsync(id);

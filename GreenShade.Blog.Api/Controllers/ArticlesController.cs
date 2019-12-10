@@ -27,16 +27,19 @@ namespace GreenShade.Blog.Api.Controllers
         }
         [ActionName("arts")]
         [HttpGet]
-        public async Task<ActionResult<List<ArticleDto>>> GetArticles(int pi = 1, int ps = 10)
+        public async Task<ActionResult<ArticleListDto>> GetArticles(int pi = 1, int ps = 10)
         {
-            List<ArticleDto> ret = null;
+            ArticleListDto ret = null;
+            List<ArticleDto> arts = new List<ArticleDto>();
             try
             {
                 if (ret == null)
                 {
-                    ret = new List<ArticleDto>();
+                    ret = new ArticleListDto();
                     var artList = await _context.GetArticles(pi, ps);
-                    artList.ForEach(art => ret.Add(new ArticleDto(art)));
+                    artList.ForEach(art => arts.Add(new ArticleDto(art)));
+                    ret.Arts = arts;
+                    ret.PageTotal =await _context.GetArticlesNum();
                 }
 
 
@@ -99,7 +102,7 @@ namespace GreenShade.Blog.Api.Controllers
         [Authorize]
         [ActionName("import_article")]
         [HttpPost]
-        public async Task<ActionResult<Article>> ImportArticle()
+        public async Task<ActionResult> ImportArticle()
         {
             var file = HttpContext.Request.Form.Files["id"];
             var uploadFileBytes = new byte[file.Length];
@@ -125,11 +128,11 @@ namespace GreenShade.Blog.Api.Controllers
                     }
                 }
                 await _context.PostArticle(article);
-                return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+                return new JsonResult(new { msg = "导入成功",code=0});
             }
             else
             {
-                return new JsonResult(new { msg = "导入失败" });
+                return new JsonResult(new { msg = "导入失败" ,code=-1});
             }
            
             
