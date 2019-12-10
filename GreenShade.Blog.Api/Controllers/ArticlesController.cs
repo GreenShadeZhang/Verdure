@@ -52,6 +52,33 @@ namespace GreenShade.Blog.Api.Controllers
             return ret;
         }
 
+
+        [ActionName("hot_arts")]
+        [HttpGet]
+        public async Task<ActionResult<ArticleListDto>> GetHotArticles(int pi = 1, int ps = 10)
+        {
+            ArticleListDto ret = null;
+            List<ArticleDto> arts = new List<ArticleDto>();
+            try
+            {
+                if (ret == null)
+                {
+                    ret = new ArticleListDto();
+                    var artList = await _context.GetHotArticles(pi, ps);
+                    artList.ForEach(art => arts.Add(new ArticleDto(art)));
+                    ret.Arts = arts;
+                    ret.PageTotal = await _context.GetHotArticlesNum();
+                }
+
+
+                return Ok(ret);
+            }
+            catch (Exception ex)
+            {
+                //return BadRequest();
+            }
+            return ret;
+        }
         [ActionName("article_detail")]
         [HttpGet]
         public async Task<ActionResult<ArticleDto>> GetArticle(string id)

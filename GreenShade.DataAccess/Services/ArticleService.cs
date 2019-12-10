@@ -31,6 +31,20 @@ namespace GreenShade.Blog.DataAccess.Services
             return null;
         }
 
+
+        public async Task<List<Article>> GetHotArticles(int pi = 1, int ps = 10)
+        {
+            try
+            {
+                var artList = await _context.Articles.Include(x => x.User).Skip((pi - 1) * ps).Take(ps).Where(x=>x.Status==1).ToListAsync();
+                return artList;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return null;
+        }
         public async Task<int> GetArticlesNum()
         {
             int ret = 0;
@@ -45,6 +59,19 @@ namespace GreenShade.Blog.DataAccess.Services
             return ret;
         }
 
+        public async Task<int> GetHotArticlesNum()
+        {
+            int ret = 0;
+            try
+            {
+                ret = await _context.Articles.Where(x=>x.Status==1).CountAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ret;
+        }
 
         public async Task<Article> GetArticle(string id)
         {

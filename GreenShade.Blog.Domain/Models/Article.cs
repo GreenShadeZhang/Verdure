@@ -17,6 +17,10 @@ namespace GreenShade.Blog.Domain.Models
         public DateTime ArticleDate { get; set; }
         public int ArticleLikeCount { get; set; }
         /// <summary>
+        /// 0为默认 1为热门 -1为删除
+        /// </summary>
+        public int Status { get; set; }
+        /// <summary>
         /// 此导航属性 ApplicationUser类型 对应数据库里的AspNetUsers表
         /// </summary>
         public virtual ApplicationUser User { get; set; }
