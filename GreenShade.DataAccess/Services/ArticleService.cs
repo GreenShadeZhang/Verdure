@@ -17,11 +17,21 @@ namespace GreenShade.Blog.DataAccess.Services
         {
             this._context = context;
         }
-        public async Task<List<Article>> GetArticles(int pi = 1, int ps = 10)
+        public async Task<List<Article>> GetArticles(int status=0,int pi = 1, int ps = 10)
         {
             try
             {
-                var artList = await _context.Articles.Include(x => x.User).Skip((pi - 1) * ps).Take(ps).ToListAsync();
+                List<int> statuss = new List<int>();
+                if (status == 0)
+                {
+                    statuss.Add(0);
+                    statuss.Add(1);
+                }
+                else if (status == 1)
+                {
+                    statuss.Add(1);
+                }
+                var artList = await _context.Articles.Include(x => x.User).OrderByDescending(a=>a.Status).OrderByDescending(a=>a.ArticleDate).Where(a => statuss.Contains(a.Status)).Skip((pi - 1) * ps).Take(ps).ToListAsync();
                 return artList;
             }
             catch (Exception ex)
@@ -29,28 +39,23 @@ namespace GreenShade.Blog.DataAccess.Services
 
             }
             return null;
-        }
-
-
-        public async Task<List<Article>> GetHotArticles(int pi = 1, int ps = 10)
-        {
-            try
-            {
-                var artList = await _context.Articles.Include(x => x.User).Skip((pi - 1) * ps).Take(ps).Where(x=>x.Status==1).ToListAsync();
-                return artList;
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return null;
-        }
-        public async Task<int> GetArticlesNum()
+        }     
+        public async Task<int> GetArticlesNum(int status)
         {
             int ret = 0;
             try
             {
-                ret = await _context.Articles.CountAsync();
+                List<int> statuss = new List<int>();
+                if (status == 0)
+                {
+                    statuss.Add(0);
+                    statuss.Add(1);
+                }
+                else if (status == 1)
+                {
+                    statuss.Add(1);
+                }
+                ret = await _context.Articles.Where(a => statuss.Contains(a.Status)).CountAsync();
             }
             catch (Exception ex)
             {
