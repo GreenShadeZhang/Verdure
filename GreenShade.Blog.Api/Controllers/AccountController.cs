@@ -65,7 +65,7 @@ namespace GreenShade.Blog.Api.Controllers
 
 
         [HttpPost("account/register")]
-        public async Task<IActionResult> Register([FromForm]RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
 
             var userInfo = new ApplicationUser {NickName=model.NickName, UserName = model.Email, Email = model.Email, SecurityStamp = "FS" };
