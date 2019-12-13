@@ -7,6 +7,7 @@ namespace GreenShade.Blog.Domain.ViewModels
 {
     public class LoginViewModel
     {
+       
         [Required]
         [EmailAddress]
         public string Email { get; set; }
@@ -14,6 +15,7 @@ namespace GreenShade.Blog.Domain.ViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
+   
     }
+   
 }
