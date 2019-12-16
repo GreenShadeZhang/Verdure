@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using GreenShade.Blog.Api.Services;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Models;
 using GreenShade.Blog.Domain.ViewModels;
@@ -109,32 +110,11 @@ namespace GreenShade.Blog.Api.Controllers
             {
                 if (model.ThirdType ==(int)LoginType.QQ)
                 {
-                    var res = _thirdLogin.QQLogin(model.Code);
+                    var res =await _thirdLogin.QQLogin(model.Code);
+                    return Ok(res);
                 }
             }
-            //var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, true, lockoutOnFailure: false);
-            //if (result.Succeeded)
-            //{
-            //    var user = await _userManager.FindByEmailAsync(model.Email);
-            //    var claims = new Claim[]
-            //   {
-            //        new Claim(ClaimTypes.Name,user.UserName),
-            //        new Claim(ClaimTypes.NameIdentifier,user.Id)
-            //   };
-            //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSeetings.SecretKey));
-            //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            //    var token = new JwtSecurityToken(
-            //        _jwtSeetings.Issuer,
-            //        _jwtSeetings.Audience,
-            //        claims,
-            //        DateTime.Now,
-            //        DateTime.Now.AddMinutes(30),
-            //        creds
-            //        );
-            //    return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
-            //}
-            return BadRequest();
+            return Ok();
         }
 
     }
