@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authentication;
 using System;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 namespace GreenShade.Blog.Api.Services
 {
@@ -40,8 +41,16 @@ namespace GreenShade.Blog.Api.Services
 
         private async Task<ApplicationUser> GetUserInfoAsync(OAuthTokenResponse accessToken)
         {
-            QQUserInfo ret = null;
+            ApplicationUser applicationUser = null;
             string openid = await GetUserIdentifierAsync(accessToken);
+            if (!string.IsNullOrWhiteSpace(openid))
+            {
+                applicationUser = await _userManager.FindByLoginAsync("QQ", openid);
+                if (applicationUser != null)
+                {
+                    return applicationUser;
+                }
+            }            
             var tokenRequestParameters = new Dictionary<string, string>()
             {
                 { "oauth_consumer_key", qqSettings.client_id},
@@ -51,36 +60,63 @@ namespace GreenShade.Blog.Api.Services
             var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
             using (var http = new HttpClient())
             {
-                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var response = await http.PostAsync(QQAuthenticationDefaults.UserInformationEndpoint, requestContent);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new HttpRequestException("An error occurred while retrieving the user identifier.");
                 }
-                using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-                var user = await _userManager.FindByLoginAsync("QQ", openid);
-                if (user != null)
-                {
-                    return user;
-                }
+                using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());               
                 int status = payload.RootElement.GetProperty("ret").GetInt32();
                 if (status != 0)
                 {
-                    return null;
+                    return new ApplicationUser();
                     //throw new HttpRequestException("An error occurred while retrieving user information.");
                 }
-                ret = Newtonsoft.Json.JsonConvert.DeserializeObject<QQUserInfo>(await response.Content.ReadAsStringAsync());               
-                var aUser = new ApplicationUser() { NickName = ret.nickname, UserName = "gil.zhang.shan" };
-                var res= await  _userManager.CreateAsync(aUser);
-                if (res.Succeeded)
+                QQUserInfo ret = Newtonsoft.Json.JsonConvert.DeserializeObject<QQUserInfo>(await response.Content.ReadAsStringAsync());
+                applicationUser = new ApplicationUser() 
+                { NickName = ret.nickname, 
+                    UserName = GetRandomString(9), 
+                    Province=ret.province,
+                     City=ret.city,
+                      Gender=ret.gender,
+                      GenderType=ret.gender_type,
+                       Avatar=ret.figureurl_qq,
+                        Year=ret.year
+                    
+                };
+                var res= await  _userManager.CreateAsync(applicationUser);
+                if (res.Succeeded &&!string.IsNullOrWhiteSpace(openid))
                 {
                     UserLoginInfo userLogin = new UserLoginInfo("QQ",openid,"QQ");
-                   await _userManager.AddLoginAsync(aUser, userLogin);
+                   await _userManager.AddLoginAsync(applicationUser, userLogin);                   
                 }
-                return new ApplicationUser() { NickName = ret.nickname, UserName = "gil.zhang.zhang" };
+                return applicationUser;
             }
         }
 
+
+        public static string GetRandomString(int length)
+        {
+            string randStr = "";
+            Random rd = new Random();
+            byte[] str = new byte[length];
+            int i;
+            for (i = 0; i < length - 1; i++)
+            {
+                int a = 0;
+                while (!((a >= 48 && a <= 57) || (a >= 97 && a <= 122)))
+                {
+                    a = rd.Next(48, 122);
+                }
+                str[i] = (byte)a;
+            }
+            string username = new string(UnicodeEncoding.ASCII.GetChars(str));
+            Random r = new Random(unchecked((int)DateTime.Now.Ticks));
+            string s1 = ((char)r.Next(97, 122)).ToString();
+            username = username.Replace("\0", "");
+            randStr = s1 + username;
+            return randStr;
+        }  
         private async Task<string> GetUserIdentifierAsync(OAuthTokenResponse tokens)
         {
             string address =string.Format(QQAuthenticationDefaults.UserIdentificationEndpoint+ "?access_token={0}", tokens.AccessToken);
@@ -116,7 +152,6 @@ namespace GreenShade.Blog.Api.Services
             var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
             using (var http = new HttpClient())
             {
-                http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 var response = await http.PostAsync(QQAuthenticationDefaults.TokenEndpoint, requestContent);
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {

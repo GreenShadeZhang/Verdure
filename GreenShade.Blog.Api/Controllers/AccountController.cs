@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GreenShade.Blog.Api.Services;
 using GreenShade.Blog.DataAccess.Services;
+using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
 using GreenShade.Blog.Domain.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -73,7 +74,7 @@ namespace GreenShade.Blog.Api.Controllers
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
 
-            var userInfo = new ApplicationUser {NickName=model.NickName, UserName = model.Email, Email = model.Email, SecurityStamp = "FS" };
+            var userInfo = new ApplicationUser { NickName = model.NickName, UserName = model.Email, Email = model.Email, SecurityStamp = "FS" };
             var result = await _userManager.CreateAsync(userInfo, model.Password);
             if (result.Succeeded)
             {
@@ -108,24 +109,50 @@ namespace GreenShade.Blog.Api.Controllers
             }
             else
             {
-                if (model.ThirdType ==(int)LoginType.QQ)
+                if (model.ThirdType == (int)LoginType.QQ)
                 {
-                    var res =await _thirdLogin.QQLogin(model.Code);
-                    return Ok(res);
+                    var user = await _thirdLogin.QQLogin(model.Code);
+
+                    if (user != null)
+                    {
+                        var userInDb = await _userManager.FindByIdAsync(user.Id);
+                        if (userInDb != null && !string.IsNullOrEmpty(userInDb.Id))
+                        {
+                            var claims = new Claim[]
+              {
+                    new Claim(ClaimTypes.Name,userInDb.UserName),
+                    new Claim(ClaimTypes.NameIdentifier,userInDb.Id)
+              };
+                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSeetings.SecretKey));
+                            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                            var token = new JwtSecurityToken(
+                                _jwtSeetings.Issuer,
+                                _jwtSeetings.Audience,
+                                claims,
+                                DateTime.Now,
+                                DateTime.Now.AddMinutes(30),
+                                creds
+                                );
+                            var userDto = new UserInfoDto(userInDb);
+                            userDto.JwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+                            return Ok(userDto);
+                        }
+                    }
+                   
+                    return Ok(user);
                 }
             }
-            return Ok();
+            return Ok(null);
         }
 
 
         [HttpGet("account/get_user")]
-        public async Task<IActionResult> GetLgin(string type,string openid)
-        {
-           //var res=await _signInManager.ExternalLoginSignInAsync(type,openid,true);
-            //ExternalLoginSignInAsync
-            //var user = await _userManager.FindByIdAsync(type);
-            var user = await _userManager.FindByLoginAsync(type, openid);
-            return Ok(user);
+        public async Task<IActionResult> GetLgin(string userId)
+        {          
+            var user = await _userManager.FindByIdAsync(userId);
+            var userDto = new UserInfoDto(user);
+            return Ok(userDto);
         }
     }
 }
