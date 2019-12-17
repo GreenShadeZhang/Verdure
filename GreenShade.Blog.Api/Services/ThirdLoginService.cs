@@ -12,29 +12,33 @@ using System.Buffers;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Authentication;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace GreenShade.Blog.Api.Services
 {
     public class ThirdLoginService
     {
-        protected HttpClient Backchannel => new HttpClient();
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         public IConfiguration Configuration { get; }
         QQLoginSetting qqSettings = new QQLoginSetting();
-        public ThirdLoginService(IConfiguration configuration)
+        public ThirdLoginService(IConfiguration configuration,SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager)
         {
             Configuration = configuration;
-
+            _signInManager = signInManager;
+            _userManager = userManager;
             //绑定jwtSeetings
             Configuration.Bind("qqlogin", qqSettings);
         }
-        public async Task<QQUserInfo> QQLogin(string code)
+        public async Task<ApplicationUser> QQLogin(string code)
         {
           var accessToken= await ExchangeCodeAsync(code);
           var info=  await GetUserInfoAsync(accessToken);  
            return info;
         }
 
-        private async Task<QQUserInfo> GetUserInfoAsync(OAuthTokenResponse accessToken)
+        private async Task<ApplicationUser> GetUserInfoAsync(OAuthTokenResponse accessToken)
         {
             QQUserInfo ret = null;
             string openid = await GetUserIdentifierAsync(accessToken);
@@ -54,15 +58,26 @@ namespace GreenShade.Blog.Api.Services
                     throw new HttpRequestException("An error occurred while retrieving the user identifier.");
                 }
                 using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-
+                var user = await _userManager.FindByLoginAsync("QQ", openid);
+                if (user != null)
+                {
+                    return user;
+                }
                 int status = payload.RootElement.GetProperty("ret").GetInt32();
                 if (status != 0)
                 {
-                    return ret;
+                    return null;
                     //throw new HttpRequestException("An error occurred while retrieving user information.");
                 }
-                ret = Newtonsoft.Json.JsonConvert.DeserializeObject<QQUserInfo>(await response.Content.ReadAsStringAsync());
-                return ret;
+                ret = Newtonsoft.Json.JsonConvert.DeserializeObject<QQUserInfo>(await response.Content.ReadAsStringAsync());               
+                var aUser = new ApplicationUser() { NickName = ret.nickname, UserName = "gil.zhang.shan" };
+                var res= await  _userManager.CreateAsync(aUser);
+                if (res.Succeeded)
+                {
+                    UserLoginInfo userLogin = new UserLoginInfo("QQ",openid,"QQ");
+                   await _userManager.AddLoginAsync(aUser, userLogin);
+                }
+                return new ApplicationUser() { NickName = ret.nickname, UserName = "gil.zhang.zhang" };
             }
         }
 
@@ -115,6 +130,11 @@ namespace GreenShade.Blog.Api.Services
                 }
             }
         }
+        /// <summary>
+        /// 工具类 将键值对转换成json 针对获取的access_token
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
         private async Task<JsonDocument> CopyPayloadAsync(Dictionary<string, StringValues> content)
         {
             var bufferWriter = new ArrayBufferWriter<byte>();

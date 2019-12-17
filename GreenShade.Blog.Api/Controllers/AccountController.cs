@@ -117,5 +117,15 @@ namespace GreenShade.Blog.Api.Controllers
             return Ok();
         }
 
+
+        [HttpGet("account/get_user")]
+        public async Task<IActionResult> GetLgin(string type,string openid)
+        {
+           //var res=await _signInManager.ExternalLoginSignInAsync(type,openid,true);
+            //ExternalLoginSignInAsync
+            //var user = await _userManager.FindByIdAsync(type);
+            var user = await _userManager.FindByLoginAsync(type, openid);
+            return Ok(user);
+        }
     }
 }
