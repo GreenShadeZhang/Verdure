@@ -47,6 +47,7 @@ namespace GreenShade.Blog.Api.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
+              
                 var claims = new Claim[]
                {
                     new Claim(ClaimTypes.Name,user.UserName),
@@ -63,7 +64,10 @@ namespace GreenShade.Blog.Api.Controllers
                     DateTime.Now.AddMinutes(30),
                     creds
                     );
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+                var userDto = new UserInfoDto(user);
+                userDto.JwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(userDto);
+                //return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
             }
             return BadRequest();
         }

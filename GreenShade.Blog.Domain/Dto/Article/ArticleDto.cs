@@ -17,6 +17,7 @@ namespace GreenShade.Blog.Domain.Dto
         public int ArticleLikeCount { get; set; }
         public string UserId { get; set; }
         public string NickName { get; set; }
+        public string Avatar { get; set; }
         public int Status { get; set; }
         public ArticleDto()
         {
@@ -38,6 +39,7 @@ namespace GreenShade.Blog.Domain.Dto
                 {
                     this.UserId = article.UserId;
                     this.NickName = article.User.NickName;
+                    this.Avatar = article.User.Avatar;
                 }
             }
         }
