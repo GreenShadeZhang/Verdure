@@ -26,13 +26,13 @@ namespace GreenShade.Blog.Api.Hubs
         public override Task OnConnectedAsync()
         {
             var name = Context.User.Identity.Name;
-         return Clients.All.SendAsync("Connect", $"{name} joined the chat");
+         return Clients.Client(Context.ConnectionId).SendAsync("Connect", $"{name} joined the chat");
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            var name = Context.GetHttpContext().Request.Query["name"];
-            return Clients.All.SendAsync("Send", $"{name} left the chat");
+            var rommId = Context.GetHttpContext().Request.Query["room_id"];
+            return Clients.All.SendAsync("Send", $"{rommId} left the chat");
         }
 
         public Task Send(string name, string message)
