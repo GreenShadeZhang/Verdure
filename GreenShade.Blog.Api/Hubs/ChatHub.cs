@@ -29,10 +29,14 @@ namespace GreenShade.Blog.Api.Hubs
          return Clients.Client(Context.ConnectionId).SendAsync("Connect", $"{name} joined the chat");
         }
 
-        public override Task OnDisconnectedAsync(Exception exception)
+        public async override Task OnDisconnectedAsync(Exception exception)
         {
+            var name = Context.User.Identity.Name;
             var rommId = Context.GetHttpContext().Request.Query["room_id"];
-            return Clients.All.SendAsync("Send", $"{rommId} left the chat");
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, rommId);
+            await Clients.Group(rommId).SendAsync("GroupSend", $"{name} left {rommId}");
+           // await Clients.All.SendAsync("Send", $"{rommId} left the chat");
+        
         }
 
         public Task Send(string name, string message)
@@ -71,7 +75,7 @@ namespace GreenShade.Blog.Api.Hubs
 
         public async Task LeaveGroup(string groupName, string name)
         {
-            await Clients.Group(groupName).SendAsync("Send", $"{name} left {groupName}");
+            await Clients.Group(groupName).SendAsync("GroupSend", $"{name} left {groupName}");
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
