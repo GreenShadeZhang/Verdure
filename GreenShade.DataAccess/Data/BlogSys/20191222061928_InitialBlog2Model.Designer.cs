@@ -3,15 +3,17 @@ using System;
 using GreenShade.Blog.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace GreenShade.Blog.DataAccess.Data.BlogSys
 {
     [DbContext(typeof(BlogSysContext))]
-    partial class BlogSysContextModelSnapshot : ModelSnapshot
+    [Migration("20191222061928_InitialBlog2Model")]
+    partial class InitialBlog2Model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
