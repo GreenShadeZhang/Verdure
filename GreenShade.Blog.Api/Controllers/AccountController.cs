@@ -61,7 +61,7 @@ namespace GreenShade.Blog.Api.Controllers
                     _jwtSeetings.Audience,
                     claims,
                     DateTime.Now,
-                    DateTime.Now.AddMinutes(30),
+                    DateTime.Now.AddHours(30),
                     creds
                     );
                 var userDto = new UserInfoDto(user);

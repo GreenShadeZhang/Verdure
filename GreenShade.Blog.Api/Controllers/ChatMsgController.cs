@@ -10,6 +10,7 @@ using GreenShade.Blog.Domain.Models;
 using GreenShade.Blog.Domain.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using GreenShade.Blog.Domain.Dto;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -26,9 +27,29 @@ namespace GreenShade.Blog.Api.Controllers
 
         [ActionName("msgs")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ChatMassage>>> GetChatMassages()
+        public async Task<ActionResult<MsgDto>> GetChatMassages(int status = 0, int pi = 1, int ps = 10)
         {
-            return await _context.ChatMassages.ToListAsync();
+            MsgDto ret = null;
+            try
+            {
+                if (ret == null)
+                {
+                    ret = new MsgDto();
+                    var artList = await _context.ChatMassages.Include(x => x.User)
+                .OrderByDescending(a => a.Status).OrderByDescending(a => a.CreateDate)
+                .Where(a => a.Status == status).Skip((pi - 1) * ps).Take(ps).ToListAsync();
+                    List<MsgItemDto> msgs = new List<MsgItemDto>();
+                    artList.ForEach(msg => msgs.Add(new MsgItemDto(msg)));
+                    ret.Msgs = msgs;
+                    ret.PageTotal = await _context.ChatMassages.Where(a => a.Status == status).CountAsync();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                //return BadRequest();
+            }
+            return ret;
         }
 
         [ActionName("msg_detail")]
@@ -92,7 +113,7 @@ namespace GreenShade.Blog.Api.Controllers
                 {
                     if (item.Type == ClaimTypes.NameIdentifier)
                     {
-                     massage.UserId = item.Value;
+                        massage.UserId = item.Value;
                     }
                 }
             }
