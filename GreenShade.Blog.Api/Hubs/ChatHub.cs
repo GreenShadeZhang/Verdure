@@ -85,7 +85,7 @@ namespace GreenShade.Blog.Api.Hubs
             {
                 massage = res.FirstOrDefault();
             }
-            MsgItemDto msgItem = new MsgItemDto(massage,massage.UserId);
+            MsgItemDto msgItem = new MsgItemDto(massage);
             await Clients.Group(groupName).SendAsync("GroupRecv", msgItem);
         }
 
