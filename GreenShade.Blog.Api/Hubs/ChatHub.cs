@@ -1,7 +1,12 @@
 ﻿using GreenShade.Blog.DataAccess.Data;
+using GreenShade.Blog.Domain.Dto;
+using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 namespace GreenShade.Blog.Api.Hubs
 {
@@ -54,10 +59,34 @@ namespace GreenShade.Blog.Api.Hubs
             return Clients.Client(connectionId).SendAsync("Send", $"Private message from {name}: {message}");
         }
 
-        public async Task SendToGroup(string groupName, string message)
+        public async Task SendToGroup(string groupName,int mediatype, string message)
         {
-            var chatGroup = await _context.Groups.FindAsync(groupName);
-            await Clients.Group(groupName).SendAsync("GroupRecv", $"{Context.User.Identity.Name}@{chatGroup.Title}: {message}");
+            //var chatGroup = await _context.Groups.FindAsync(groupName);
+            //await Clients.Group(groupName).SendAsync("GroupRecv", $"{Context.User.Identity.Name}@{chatGroup.Title}: {message}");
+            ChatMassage massage = new ChatMassage();
+            massage.Content = message;
+            massage.MediaType = mediatype;
+            massage.RoomId = groupName;
+            massage.CreateDate = DateTime.Now;
+            if (Context.User.Identity.IsAuthenticated && Context.User.Claims != null)
+            {
+                foreach (var item in Context.User.Claims)
+                {
+                    if (item.Type == ClaimTypes.NameIdentifier)
+                    {
+                        massage.UserId = item.Value;
+                    }
+                }
+            }
+            _context.ChatMassages.Add(massage);
+            int x=  await _context.SaveChangesAsync();
+            var res = await _context.ChatMassages.Include(x => x.User).Where(a => a.Id == massage.Id).ToListAsync();
+            if(res!=null&&res.Count>0)
+            {
+                massage = res.FirstOrDefault();
+            }
+            MsgItemDto msgItem = new MsgItemDto(massage,massage.UserId);
+            await Clients.Group(groupName).SendAsync("GroupRecv", msgItem);
         }
 
         public Task SendToOthersInGroup(string groupName, string name, string message)

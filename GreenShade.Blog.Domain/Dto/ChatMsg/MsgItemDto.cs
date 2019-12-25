@@ -15,11 +15,12 @@ namespace GreenShade.Blog.Domain.Dto
         public string NickName { get; set; }
         public string Avatar { get; set; }
         public int Status { get; set; }
+        public bool IsMe { get; set; }
         public MsgItemDto()
         {
 
         }
-        public MsgItemDto(ChatMassage massage)
+        public MsgItemDto(ChatMassage massage,string userId="")
         {
             if (massage != null)
             {
@@ -29,9 +30,13 @@ namespace GreenShade.Blog.Domain.Dto
                 this.Status = massage.Status;
                 if (massage.User != null)
                 {
+                    if (!string.IsNullOrWhiteSpace(userId)&&massage.UserId.Equals(userId))
+                    {
+                        this.IsMe = true;
+                    }
                     this.UserId = massage.UserId;
                     this.NickName = massage.User.NickName;
-                    this.Avatar = massage.User.Avatar;
+                    this.Avatar = massage.User.Avatar;                   
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace GreenShade.Blog.Api.Controllers
         {
             _context = context;
         }
-
+        [Authorize]
         [ActionName("msgs")]
         [HttpGet]
         public async Task<ActionResult<MsgDto>> GetChatMassages(int status = 0, int pi = 1, int ps = 10)
@@ -35,11 +35,23 @@ namespace GreenShade.Blog.Api.Controllers
                 if (ret == null)
                 {
                     ret = new MsgDto();
+
                     var artList = await _context.ChatMassages.Include(x => x.User)
                 .OrderByDescending(a => a.Status).OrderByDescending(a => a.CreateDate)
                 .Where(a => a.Status == status).Skip((pi - 1) * ps).Take(ps).ToListAsync();
                     List<MsgItemDto> msgs = new List<MsgItemDto>();
-                    artList.ForEach(msg => msgs.Add(new MsgItemDto(msg)));
+                    string userId = "";
+                    if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
+                    {
+                        foreach (var item in HttpContext.User.Claims)
+                        {
+                            if (item.Type == ClaimTypes.NameIdentifier)
+                            {
+                                userId= item.Value;
+                            }
+                        }
+                    }
+                    artList.ForEach(msg => msgs.Add(new MsgItemDto(msg,userId)));
                     ret.Msgs = msgs;
                     ret.PageTotal = await _context.ChatMassages.Where(a => a.Status == status).CountAsync();
                 }
