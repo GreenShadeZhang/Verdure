@@ -31,7 +31,7 @@ namespace GreenShade.Blog.Api.Hubs
         public override Task OnConnectedAsync()
         {
             var name = Context.User.Identity.Name;
-         return Clients.Client(Context.ConnectionId).SendAsync("Connect", $"{name} joined the chat");
+         return Clients.Client(Context.ConnectionId).SendAsync("Connect", $"{name} 登录");
         }
 
         public async override Task OnDisconnectedAsync(Exception exception)
@@ -39,7 +39,8 @@ namespace GreenShade.Blog.Api.Hubs
             var name = Context.User.Identity.Name;
             var rommId = Context.GetHttpContext().Request.Query["room_id"];
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, rommId);
-            await Clients.Group(rommId).SendAsync("GroupSend", $"{name} left {rommId}");
+            var chatGroup = await _context.Groups.FindAsync(rommId);
+            await Clients.OthersInGroup(rommId).SendAsync("GroupSend", $"{name} 离开 {chatGroup.Title}");
            // await Clients.All.SendAsync("Send", $"{rommId} left the chat");
         
         }
@@ -99,12 +100,12 @@ namespace GreenShade.Blog.Api.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             var chatGroup = await _context.Groups.FindAsync(groupName);
 
-            await Clients.Group(groupName).SendAsync("GroupSend", $"{Context.User.Identity.Name} joined {chatGroup.Title}");
+            await Clients.OthersInGroup(groupName).SendAsync("GroupSend", $"{Context.User.Identity.Name} 加入 {chatGroup.Title}");
         }
 
         public async Task LeaveGroup(string groupName, string name)
         {
-            await Clients.Group(groupName).SendAsync("GroupSend", $"{name} left {groupName}");
+            await Clients.Group(groupName).SendAsync("GroupSend", $"{name} 离开 {groupName}");
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         }
