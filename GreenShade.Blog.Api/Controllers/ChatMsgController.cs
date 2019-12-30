@@ -24,7 +24,7 @@ namespace GreenShade.Blog.Api.Controllers
         {
             _context = context;
         }
-        [Authorize]
+        //[Authorize]
         [ActionName("msgs")]
         [HttpGet]
         public async Task<ActionResult<MsgDto>> GetChatMassages(int status = 0, int pi = 1, int ps = 10)
