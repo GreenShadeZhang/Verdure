@@ -12,6 +12,7 @@ using System.Security.Claims;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Dto;
 using System.IO;
+using GreenShade.Blog.Domain;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -86,6 +87,31 @@ namespace GreenShade.Blog.Api.Controllers
                 }
             }
             await _context.PostArticle(article);
+            return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+        }
+
+        //[Authorize]
+        [ActionName("update_article")]
+        [HttpPost]
+        public async Task<ActionResult<Article>>UpdateArticle([FromBody]UpdateArtArgs art)
+        {
+            var article = await _context.GetArticle(art.Id);
+            //if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
+            //{
+            //    foreach (var item in HttpContext.User.Claims)
+            //    {
+            //        if (item.Type == ClaimTypes.NameIdentifier)
+            //        {
+            //            article.UserId = item.Value;
+            //        }
+            //    }
+            //}
+            if (article != null)
+            {
+                article.Title = art.BlogTitle;
+                article.ArticleDate = DateTime.Now;
+                await _context.UpdateArticle(article);
+            }
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }
 

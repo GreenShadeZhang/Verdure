@@ -98,7 +98,11 @@ namespace GreenShade.Blog.DataAccess.Services
             await _context.Articles.AddAsync(article);
             await _context.SaveChangesAsync();
         }
-
+        public async Task UpdateArticle(Article article)
+        {
+            _context.Articles.Update(article);
+            await _context.SaveChangesAsync();
+        }
         public async Task<Article> DeleteArticle(string id)
         {
             var article = await _context.Articles.FindAsync(id);
