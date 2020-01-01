@@ -112,7 +112,7 @@ namespace GreenShade.Blog.Api.Controllers
                 article.ArticleDate = DateTime.Now;
                 await _context.UpdateArticle(article);
             }
-            return CreatedAtAction("GetArticle", new { id = article.Id }, article);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -132,6 +132,9 @@ namespace GreenShade.Blog.Api.Controllers
         public async Task<ActionResult> ImportArticle()
         {
             var file = HttpContext.Request.Form.Files["id"];
+            string title= HttpContext.Request.Form["title"];
+            string pic_url = HttpContext.Request.Form["pic_url"];
+            string pic_info = HttpContext.Request.Form["pic_info"];
             var uploadFileBytes = new byte[file.Length];
             file.OpenReadStream().Read(uploadFileBytes, 0, (int)file.Length);
           string str= System.Text.Encoding.Default.GetString(uploadFileBytes);
@@ -143,7 +146,17 @@ namespace GreenShade.Blog.Api.Controllers
             {
                 Article article = new Article();
                 article.Content = str;
-                article.Title = file.FileName.Split(".")[0];
+                if (string.IsNullOrEmpty(title))
+                {
+                    article.Title = file.FileName.Split(".")[0];
+                }
+                else
+                {
+                    article.Title = title;
+                }
+                article.PicUrl = pic_url;
+                article.PicInfo = pic_info;
+                //article.Title = file.FileName.Split(".")[0];
                 if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
                 {
                     foreach (var item in HttpContext.User.Claims)

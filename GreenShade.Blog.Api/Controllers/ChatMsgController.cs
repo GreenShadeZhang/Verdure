@@ -27,7 +27,7 @@ namespace GreenShade.Blog.Api.Controllers
         //[Authorize]
         [ActionName("msgs")]
         [HttpGet]
-        public async Task<ActionResult<MsgDto>> GetChatMassages(int status = 0, int pi = 1, int ps = 10)
+        public async Task<ActionResult<MsgDto>> GetChatMassages(string roomid="",int status = 0, int pi = 1, int ps = 10)
         {
             MsgDto ret = null;
             try
@@ -38,7 +38,7 @@ namespace GreenShade.Blog.Api.Controllers
 
                     var artList = await _context.ChatMassages.Include(x => x.User)
                 .OrderByDescending(a => a.Status).OrderByDescending(a => a.CreateDate)
-                .Where(a => a.Status == status).Skip((pi - 1) * ps).Take(ps).ToListAsync();
+                .Where(a =>a.RoomId==roomid&&a.Status == status).Skip((pi - 1) * ps).Take(ps).ToListAsync();
                     List<MsgItemDto> msgs = new List<MsgItemDto>();
                     string userId = "";
                     if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)

@@ -20,6 +20,8 @@ namespace GreenShade.Blog.Domain.Models
         /// 0为默认 1为热门 -1为删除
         /// </summary>
         public int Status { get; set; }
+        public string PicUrl { get; set; }
+        public string PicInfo { get; set; }
         /// <summary>
         /// 此导航属性 ApplicationUser类型 对应数据库里的AspNetUsers表
         /// </summary>

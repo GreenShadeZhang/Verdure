@@ -19,6 +19,8 @@ namespace GreenShade.Blog.Domain.Dto
         public string NickName { get; set; }
         public string Avatar { get; set; }
         public int Status { get; set; }
+        public string PicUrl { get; set; }
+        public string PicInfo { get; set; }
         public ArticleDto()
         {
 
@@ -35,6 +37,8 @@ namespace GreenShade.Blog.Domain.Dto
                 this.Id = article.Id;
                 this.Title = article.Title;
                 this.Status = article.Status;
+                this.PicUrl = article.PicUrl;
+                this.PicInfo = article.PicInfo;
                 if (article.User != null)
                 {
                     this.UserId = article.UserId;
