@@ -4,43 +4,41 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace GreenShade.Blog.DataAccess.Services
+namespace GreenShade.Blog.Api.Services
 {
-    public class ArticleService
+    public class BlogManageService
     {
         private readonly BlogSysContext _context;
 
-        public ArticleService(BlogSysContext context)
+        public BlogManageService(BlogSysContext context)
         {
             this._context = context;
         }
-        public async Task<List<Article>> GetArticlesByType(int type=0,int pi = 1, int ps = 10)
+        public async Task<List<Article>> GetArticlesByStatus(int status = 0, int pi = 1, int ps = 10)
         {
             try
             {
-                List<int> types = new List<int>();
-                if (type == 0)
+                List<int> statuss = new List<int>();
+                if (status == 0)
                 {
-                    types.Add(0);
-                    types.Add(1);
+                    statuss.Add(0);
+                    statuss.Add(1);
+                    statuss.Add(-1);
                 }
-                else if (type == 1)
+                else if (status == 1)
                 {
-                    types.Add(1);
-                }
-                else if(type == 3)
+                    statuss.Add(0);
+                }   
+                else if (status == 3)
                 {
-                    types.Add(0);
-                    types.Add(1);
-                    types.Add(-1);
+                    statuss.Add(-1);
                 }
                 var artList = await _context.Articles.Include(x => x.User)
-                    .OrderByDescending(a=>a.Type)
-                    .OrderByDescending(a=>a.ArticleDate)
-                    .Where(a => types.Contains(a.Type)&&a.Status!=-1)
+                    .OrderByDescending(a => a.Type)
+                    .OrderByDescending(a => a.ArticleDate)
+                    .Where(a => statuss.Contains(a.Status))
                     .Skip((pi - 1) * ps).Take(ps).ToListAsync();
                 return artList;
             }
@@ -49,29 +47,28 @@ namespace GreenShade.Blog.DataAccess.Services
 
             }
             return null;
-        }     
-        public async Task<int> GetArticlesNumByType(int type)
+        }
+        public async Task<int> GetArticlesNumByStatus(int status)
         {
             int ret = 0;
             try
             {
-                List<int> types = new List<int>();
-                if (type == 0)
+                List<int> statuss = new List<int>();
+                if (status == 0)
                 {
-                    types.Add(0);
-                    types.Add(1);
+                    statuss.Add(0);
+                    statuss.Add(1);
+                    statuss.Add(-1);
                 }
-                else if (type == 1)
+                else if (status == 1)
                 {
-                    types.Add(1);
+                    statuss.Add(0);
                 }
-                else if (type == 3)
+                else if (status == 3)
                 {
-                    types.Add(0);
-                    types.Add(1);
-                    types.Add(-1);
+                    statuss.Add(-1);
                 }
-                ret = await _context.Articles.Where(a => types.Contains(a.Type)&&a.Status!=-1).CountAsync();
+                ret = await _context.Articles.Where(a => statuss.Contains(a.Status)).CountAsync();
             }
             catch (Exception ex)
             {
@@ -85,7 +82,7 @@ namespace GreenShade.Blog.DataAccess.Services
             int ret = 0;
             try
             {
-                ret = await _context.Articles.Where(x=>x.Status==1).CountAsync();
+                ret = await _context.Articles.Where(x => x.Status == 1).CountAsync();
             }
             catch (Exception ex)
             {

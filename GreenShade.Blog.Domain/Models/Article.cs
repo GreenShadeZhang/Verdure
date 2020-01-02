@@ -22,6 +22,8 @@ namespace GreenShade.Blog.Domain.Models
         public int Status { get; set; }
         public string PicUrl { get; set; }
         public string PicInfo { get; set; }
+        public string Tag { get; set; }
+        public int Type { get; set; }
         /// <summary>
         /// 此导航属性 ApplicationUser类型 对应数据库里的AspNetUsers表
         /// </summary>

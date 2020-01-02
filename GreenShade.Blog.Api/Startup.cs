@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using GreenShade.Blog.Api.Hubs;
 using GreenShade.Blog.Api.Services;
@@ -43,6 +44,7 @@ namespace GreenShade.Blog.Api
             
             services.Configure<QQLoginSetting>(Configuration.GetSection("qqlogin"));
             services.AddScoped<ArticleService>();
+            services.AddScoped<BlogManageService>();
             services.AddScoped<WallpaperService>();
             services.AddScoped<PushWnsService>();
             services.AddScoped<ThirdLoginService>();
@@ -85,9 +87,10 @@ namespace GreenShade.Blog.Api
                     builder.AllowAnyOrigin() //允许任何来源的主机访问
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .WithOrigins("http://192.168.1.109:4200","http://localhost:4200", 
+                    .WithOrigins("http://192.168.1.109:4200", "http://localhost:4200",
                     "http://192.168.1.103:4200", "http://192.168.16.67:4200", "http://192.168.16.138:4200")
-                    .AllowCredentials();//指定处理cookie
+                    .AllowCredentials()//指定处理cookie
+                    .SetPreflightMaxAge(TimeSpan.FromSeconds(60));
                 });
             });
 
