@@ -1,6 +1,7 @@
 ﻿using GreenShade.Blog.DataAccess.Data;
 using GreenShade.Blog.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace GreenShade.Blog.DataAccess.Services
     public class ArticleService
     {
         private readonly BlogSysContext _context;
-
-        public ArticleService(BlogSysContext context)
+        private ILogger<ArticleService> _logger;
+        public ArticleService(BlogSysContext context,
+            ILogger<ArticleService> logger)
         {
-            this._context = context;
+            _context = context;
+            _logger = logger;
         }
         public async Task<List<Article>> GetArticlesByType(int type=0,int pi = 1, int ps = 10)
         {
@@ -46,7 +49,7 @@ namespace GreenShade.Blog.DataAccess.Services
             }
             catch (Exception ex)
             {
-
+                _logger.LogError("ef get Arts", ex);
             }
             return null;
         }     

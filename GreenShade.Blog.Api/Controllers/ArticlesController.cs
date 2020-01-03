@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Dto;
+using GreenShade.Blog.Api.Filters;
+using GreenShade.Blog.Api.Common;
+using Microsoft.Extensions.Logging;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -12,14 +15,18 @@ namespace GreenShade.Blog.Api.Controllers
     [ApiController]
     public class ArticlesController : ControllerBase
     {
+        private ILogger<ArticlesController> _logger;
         private readonly ArticleService _context;
-        public ArticlesController(ArticleService context)
+        public ArticlesController(ArticleService context,
+            ILogger<ArticlesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
         [ActionName("arts")]
         [HttpGet]
-        public async Task<ActionResult<ArticleListDto>> GetArticles(int type=0,int pi = 1, int ps = 10)
+        [ExceptionHandle("获取博客失败请重试")]
+        public async Task<ActionResult<ApiResult<ArticleListDto>>> GetArticles(int type=0,int pi = 1, int ps = 10)
         {
             ArticleListDto ret = null;
             List<ArticleDto> arts = new List<ArticleDto>();
@@ -33,15 +40,13 @@ namespace GreenShade.Blog.Api.Controllers
                     ret.Arts = arts;
                     ret.PageTotal =await _context.GetArticlesNumByType(type);
                 }
-
-
-                return Ok(ret);
+                return ApiResult<ArticleListDto>.Ok(ret);
             }
             catch (Exception ex)
             {
-                //return BadRequest();
-            }
-            return ret;
+                _logger.LogError("获取博客失败",ex);
+            }           
+            return ApiResult<ArticleListDto>.Ok(ret);
         }
         [ActionName("article_detail")]
         [HttpGet]

@@ -62,8 +62,7 @@ namespace GreenShade.Blog.Api.Controllers
             HttpClient client = new HttpClient();
             string res = await client.GetStringAsync(url);
             return res;
-        }
-
+        }   
         [HttpGet]
         public async Task<string> PostChannel()
         {

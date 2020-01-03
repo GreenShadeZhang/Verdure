@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication;
 using System;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 namespace GreenShade.Blog.Api.Services
 {
@@ -21,22 +22,22 @@ namespace GreenShade.Blog.Api.Services
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly QQLoginSetting _qqSettings;
         public IConfiguration Configuration { get; }
-        QQLoginSetting qqSettings = new QQLoginSetting();
-        public ThirdLoginService(IConfiguration configuration,SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+        public ThirdLoginService(IConfiguration configuration, SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+             IOptions<QQLoginSetting> qqSettingsOptions)
         {
             Configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
-            //绑定jwtSeetings
-            Configuration.Bind("qqlogin", qqSettings);
+            _qqSettings = qqSettingsOptions.Value;
         }
         public async Task<ApplicationUser> QQLogin(string code)
         {
-          var accessToken= await ExchangeCodeAsync(code);
-          var info=  await GetUserInfoAsync(accessToken);  
-           return info;
+            var accessToken = await ExchangeCodeAsync(code);
+            var info = await GetUserInfoAsync(accessToken);
+            return info;
         }
 
         private async Task<ApplicationUser> GetUserInfoAsync(OAuthTokenResponse accessToken)
@@ -50,12 +51,12 @@ namespace GreenShade.Blog.Api.Services
                 {
                     return applicationUser;
                 }
-            }            
+            }
             var tokenRequestParameters = new Dictionary<string, string>()
             {
-                { "oauth_consumer_key", qqSettings.client_id},
+                { "oauth_consumer_key", _qqSettings.client_id},
                 { "access_token", accessToken.AccessToken},
-                { "openid", openid }            
+                { "openid", openid }
             };
             var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
             using (var http = new HttpClient())
@@ -65,7 +66,7 @@ namespace GreenShade.Blog.Api.Services
                 {
                     throw new HttpRequestException("An error occurred while retrieving the user identifier.");
                 }
-                using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());               
+                using var payload = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
                 int status = payload.RootElement.GetProperty("ret").GetInt32();
                 if (status != 0)
                 {
@@ -73,22 +74,23 @@ namespace GreenShade.Blog.Api.Services
                     //throw new HttpRequestException("An error occurred while retrieving user information.");
                 }
                 QQUserInfo ret = Newtonsoft.Json.JsonConvert.DeserializeObject<QQUserInfo>(await response.Content.ReadAsStringAsync());
-                applicationUser = new ApplicationUser() 
-                { NickName = ret.nickname, 
-                    UserName = GetRandomString(9), 
-                    Province=ret.province,
-                     City=ret.city,
-                      Gender=ret.gender,
-                      GenderType=ret.gender_type,
-                       Avatar=ret.figureurl_qq,
-                        Year=ret.year
-                    
-                };
-                var res= await  _userManager.CreateAsync(applicationUser);
-                if (res.Succeeded &&!string.IsNullOrWhiteSpace(openid))
+                applicationUser = new ApplicationUser()
                 {
-                    UserLoginInfo userLogin = new UserLoginInfo("QQ",openid,"QQ");
-                   await _userManager.AddLoginAsync(applicationUser, userLogin);                   
+                    NickName = ret.nickname,
+                    UserName = GetRandomString(9),
+                    Province = ret.province,
+                    City = ret.city,
+                    Gender = ret.gender,
+                    GenderType = ret.gender_type,
+                    Avatar = ret.figureurl_qq,
+                    Year = ret.year
+
+                };
+                var res = await _userManager.CreateAsync(applicationUser);
+                if (res.Succeeded && !string.IsNullOrWhiteSpace(openid))
+                {
+                    UserLoginInfo userLogin = new UserLoginInfo("QQ", openid, "QQ");
+                    await _userManager.AddLoginAsync(applicationUser, userLogin);
                 }
                 return applicationUser;
             }
@@ -116,17 +118,17 @@ namespace GreenShade.Blog.Api.Services
             username = username.Replace("\0", "");
             randStr = s1 + username;
             return randStr;
-        }  
+        }
         private async Task<string> GetUserIdentifierAsync(OAuthTokenResponse tokens)
         {
-            string address =string.Format(QQAuthenticationDefaults.UserIdentificationEndpoint+ "?access_token={0}", tokens.AccessToken);
+            string address = string.Format(QQAuthenticationDefaults.UserIdentificationEndpoint + "?access_token={0}", tokens.AccessToken);
             using (var http = new HttpClient())
-            {           
+            {
                 var response = await http.GetAsync(address);
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 {
                     throw new HttpRequestException("An error occurred while retrieving the user identifier.");
-                }             
+                }
                 string body = await response.Content.ReadAsStringAsync();
                 int index = body.IndexOf("{");
                 if (index > 0)
@@ -136,16 +138,16 @@ namespace GreenShade.Blog.Api.Services
                 using var payload = JsonDocument.Parse(body);
                 return payload.RootElement.GetString("openid");
             }
-            
+
         }
 
         protected virtual async Task<OAuthTokenResponse> ExchangeCodeAsync(string code)
-        {   
+        {
             var tokenRequestParameters = new Dictionary<string, string>()
             {
-                { "client_id", qqSettings.client_id},
-                { "redirect_uri", qqSettings.redirect_uri},
-                { "client_secret", qqSettings.client_secret },
+                { "client_id", _qqSettings.client_id},
+                { "redirect_uri", _qqSettings.redirect_uri},
+                { "client_secret", _qqSettings.client_secret },
                 { "code", code },
                 { "grant_type", "authorization_code" },
             };

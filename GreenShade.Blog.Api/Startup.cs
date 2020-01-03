@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using GreenShade.Blog.Api.Filters;
 using GreenShade.Blog.Api.Hubs;
 using GreenShade.Blog.Api.Services;
 using GreenShade.Blog.DataAccess.Data;
@@ -30,19 +31,16 @@ namespace GreenShade.Blog.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-          
-
             services.AddDbContext<AppIdentityDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
             services.AddDbContext<BlogSysContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
-            ///
             services.AddSignalR();          
-            services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
-            
+            services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));            
             services.Configure<QQLoginSetting>(Configuration.GetSection("qqlogin"));
+
             services.AddScoped<ArticleService>();
             services.AddScoped<BlogManageService>();
             services.AddScoped<WallpaperService>();
@@ -93,8 +91,11 @@ namespace GreenShade.Blog.Api
                     .SetPreflightMaxAge(TimeSpan.FromSeconds(60));
                 });
             });
-
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new ExceptionHandleAttribute());//根据实例注入过滤器
+            });
+            //services.AddControllers();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
