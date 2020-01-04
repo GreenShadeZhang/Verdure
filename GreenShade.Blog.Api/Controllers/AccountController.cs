@@ -111,6 +111,7 @@ namespace GreenShade.Blog.Api.Controllers
             {
                 return BadRequest();
             }
+
             else
             {
                 if (model.ThirdType == (int)LoginType.QQ)
