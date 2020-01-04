@@ -9,6 +9,8 @@ using System.Security.Claims;
 using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain;
 using GreenShade.Blog.Api.Services;
+using GreenShade.Blog.Api.Filters;
+using GreenShade.Blog.Api.Common;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -25,7 +27,7 @@ namespace GreenShade.Blog.Api.Controllers
         [Authorize]
         [ActionName("arts")]
         [HttpGet]
-        public async Task<ActionResult<ArticleListDto>> GetArticles(int status=0,int pi = 1, int ps = 10)
+        public async Task<ActionResult<ArticleListDto>> GetArticles(int status = 0, int pi = 1, int ps = 10)
         {
             ArticleListDto ret = null;
             List<ArticleDto> arts = new List<ArticleDto>();
@@ -37,7 +39,7 @@ namespace GreenShade.Blog.Api.Controllers
                     var artList = await _managecontext.GetArticlesByStatus(status, pi, ps);
                     artList.ForEach(art => arts.Add(new ArticleDto(art)));
                     ret.Arts = arts;
-                    ret.PageTotal =await _managecontext.GetArticlesNumByStatus(status);
+                    ret.PageTotal = await _managecontext.GetArticlesNumByStatus(status);
                 }
 
 
@@ -50,7 +52,7 @@ namespace GreenShade.Blog.Api.Controllers
             return ret;
         }
 
-    
+
         [ActionName("article_detail")]
         [HttpGet]
         public async Task<ActionResult<ArticleDto>> GetArticle(string id)
@@ -90,19 +92,10 @@ namespace GreenShade.Blog.Api.Controllers
         [Authorize]
         [ActionName("update_article")]
         [HttpPost]
-        public async Task<ActionResult<Article>>UpdateArticle([FromBody]UpdateArtArgs art)
+        [ExceptionHandle("更新失败。")]
+        public async Task<ActionResult<ApiResult<Article>>> UpdateArticle([FromBody]UpdateArtArgs art)
         {
             var article = await _managecontext.GetArticle(art.Id);
-            //if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
-            //{
-            //    foreach (var item in HttpContext.User.Claims)
-            //    {
-            //        if (item.Type == ClaimTypes.NameIdentifier)
-            //        {
-            //            article.UserId = item.Value;
-            //        }
-            //    }
-            //}
             if (article != null)
             {
                 article.Title = art.BlogTitle;
@@ -110,8 +103,10 @@ namespace GreenShade.Blog.Api.Controllers
                 article.PicInfo = art.PicIntroduce;
                 article.ArticleDate = DateTime.Now;
                 await _managecontext.UpdateArticle(article);
+                return ApiResult<Article>.Ok("更新成功。");
             }
-            return Ok();
+            return ApiResult<Article>.Fail("更新失败。");
+
         }
 
         [Authorize]
@@ -120,16 +115,6 @@ namespace GreenShade.Blog.Api.Controllers
         public async Task<ActionResult<Article>> ChangeArticleStatus([FromBody]ChangeArtStatusArgs art)
         {
             var article = await _managecontext.GetArticle(art.Id);
-            //if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
-            //{
-            //    foreach (var item in HttpContext.User.Claims)
-            //    {
-            //        if (item.Type == ClaimTypes.NameIdentifier)
-            //        {
-            //            article.UserId = item.Value;
-            //        }
-            //    }
-            //}
             if (article != null)
             {
                 article.Status = art.Status;
@@ -146,16 +131,6 @@ namespace GreenShade.Blog.Api.Controllers
         public async Task<ActionResult<Article>> ChangeArticleType([FromBody]ChangeArtTypeArgs art)
         {
             var article = await _managecontext.GetArticle(art.Id);
-            //if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
-            //{
-            //    foreach (var item in HttpContext.User.Claims)
-            //    {
-            //        if (item.Type == ClaimTypes.NameIdentifier)
-            //        {
-            //            article.UserId = item.Value;
-            //        }
-            //    }
-            //}
             if (article != null)
             {
                 article.Type = art.Type;
@@ -178,18 +153,19 @@ namespace GreenShade.Blog.Api.Controllers
         [Authorize]
         [ActionName("import_article")]
         [HttpPost]
-        public async Task<ActionResult> ImportArticle()
+        [ExceptionHandle("导入失败。")]
+        public async Task<ActionResult<ApiResult<string>>> ImportArticle()
         {
             var file = HttpContext.Request.Form.Files["id"];
-            string title= HttpContext.Request.Form["title"];
+            string title = HttpContext.Request.Form["title"];
             string pic_url = HttpContext.Request.Form["pic_url"];
             string pic_info = HttpContext.Request.Form["pic_info"];
             var uploadFileBytes = new byte[file.Length];
             file.OpenReadStream().Read(uploadFileBytes, 0, (int)file.Length);
-          string str= System.Text.Encoding.Default.GetString(uploadFileBytes);
-          //  var dic=Directory.GetCurrentDirectory();
-          //string localPath= Path.Combine(dic,file.FileName);
-          //  System.IO.File.WriteAllBytes(localPath,uploadFileBytes) ;
+            string str = System.Text.Encoding.Default.GetString(uploadFileBytes);
+            //  var dic=Directory.GetCurrentDirectory();
+            //string localPath= Path.Combine(dic,file.FileName);
+            //  System.IO.File.WriteAllBytes(localPath,uploadFileBytes) ;
             //Path.;
             if (!string.IsNullOrWhiteSpace(str))
             {
@@ -205,26 +181,14 @@ namespace GreenShade.Blog.Api.Controllers
                 }
                 article.PicUrl = pic_url;
                 article.PicInfo = pic_info;
-                //article.Title = file.FileName.Split(".")[0];
                 if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
                 {
-                    foreach (var item in HttpContext.User.Claims)
-                    {
-                        if (item.Type == ClaimTypes.NameIdentifier)
-                        {
-                            article.UserId = item.Value;
-                        }
-                    }
+                    article.UserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 }
                 await _managecontext.PostArticle(article);
-                return new JsonResult(new { msg = "导入成功",code=0});
+                return ApiResult<string>.Ok("导入成功。");
             }
-            else
-            {
-                return new JsonResult(new { msg = "导入失败" ,code=-1});
-            }
-           
-            
+            return ApiResult<string>.Fail("导入失败.");
         }
     }
 }

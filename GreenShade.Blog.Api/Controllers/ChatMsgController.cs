@@ -45,13 +45,7 @@ namespace GreenShade.Blog.Api.Controllers
                     string userId = "";
                     if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
                     {
-                        foreach (var item in HttpContext.User.Claims)
-                        {
-                            if (item.Type == ClaimTypes.NameIdentifier)
-                            {
-                                userId = item.Value;
-                            }
-                        }
+                        userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
                     }
                     artList.ForEach(msg => msgs.Add(new MsgItemDto(msg, userId)));
                     ret.Msgs = msgs;

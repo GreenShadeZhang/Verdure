@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using GreenShade.Blog.Api.Common;
 using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
@@ -28,7 +29,7 @@ namespace GreenShade.Blog.Api.Controllers
 
         [ActionName("bing")]
         [HttpGet]
-        public async Task<ActionResult<List<WallpapersDetail>>> GetBing()
+        public async Task<ActionResult<ApiResult<List<WallpapersDetail>>>> GetBing()
         {
             List<WallpapersDetail> picModels = new List<WallpapersDetail>();
             WallpapersData wallPaperModel = await WallpaperService.GetWallparper(0, 6);
@@ -41,7 +42,7 @@ namespace GreenShade.Blog.Api.Controllers
                     Source = "https://www.bing.com" + item.url
                 });
             }
-            return picModels;
+            return ApiResult<List<WallpapersDetail>>.Ok(picModels);
         }
 
         [HttpGet]
