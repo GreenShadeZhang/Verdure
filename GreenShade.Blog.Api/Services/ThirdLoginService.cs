@@ -36,8 +36,7 @@ namespace GreenShade.Blog.Api.Services
         public async Task<ApplicationUser> QQLogin(string code)
         {
             var accessToken = await ExchangeCodeAsync(code);
-            var info = await GetUserInfoAsync(accessToken);
-            return info;
+             return await GetUserInfoAsync(accessToken);
         }
 
         private async Task<ApplicationUser> GetUserInfoAsync(OAuthTokenResponse accessToken)
@@ -50,6 +49,8 @@ namespace GreenShade.Blog.Api.Services
                 if (applicationUser != null)
                 {
                     return applicationUser;
+                   //var res=  await _signInManager.ExternalLoginSignInAsync("QQ", openid, true);
+                   // return res.Succeeded ? applicationUser : null;                   
                 }
             }
             var tokenRequestParameters = new Dictionary<string, string>()

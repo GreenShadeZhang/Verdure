@@ -11,6 +11,8 @@ using GreenShade.Blog.Domain.ViewModels;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using GreenShade.Blog.Domain.Dto;
+using GreenShade.Blog.Api.Common;
+using GreenShade.Blog.Api.Filters;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -24,21 +26,21 @@ namespace GreenShade.Blog.Api.Controllers
         {
             _context = context;
         }
-        //[Authorize]
+        [Authorize]
         [ActionName("msgs")]
         [HttpGet]
-        public async Task<ActionResult<MsgDto>> GetChatMassages(string roomid="",int status = 0, int pi = 1, int ps = 10)
+        public async Task<ActionResult<ApiResult<MsgDto>>> GetChatMassages(string roomid = "", int status = 0, int pi = 1, int ps = 10)
         {
+
             MsgDto ret = null;
             try
             {
                 if (ret == null)
                 {
                     ret = new MsgDto();
-
                     var artList = await _context.ChatMassages.Include(x => x.User)
                 .OrderByDescending(a => a.Status).OrderByDescending(a => a.CreateDate)
-                .Where(a =>a.RoomId==roomid&&a.Status == status).Skip((pi - 1) * ps).Take(ps).ToListAsync();
+                .Where(a => a.RoomId == roomid && a.Status == status).Skip((pi - 1) * ps).Take(ps).ToListAsync();
                     List<MsgItemDto> msgs = new List<MsgItemDto>();
                     string userId = "";
                     if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
@@ -47,11 +49,11 @@ namespace GreenShade.Blog.Api.Controllers
                         {
                             if (item.Type == ClaimTypes.NameIdentifier)
                             {
-                                userId= item.Value;
+                                userId = item.Value;
                             }
                         }
                     }
-                    artList.ForEach(msg => msgs.Add(new MsgItemDto(msg,userId)));
+                    artList.ForEach(msg => msgs.Add(new MsgItemDto(msg, userId)));
                     ret.Msgs = msgs;
                     ret.PageTotal = await _context.ChatMassages.Where(a => a.Status == status).CountAsync();
                 }
@@ -61,7 +63,7 @@ namespace GreenShade.Blog.Api.Controllers
             {
                 //return BadRequest();
             }
-            return ret;
+            return ApiResult<MsgDto>.Ok(ret);
         }
 
         [ActionName("msg_detail")]
@@ -112,27 +114,34 @@ namespace GreenShade.Blog.Api.Controllers
         [Authorize]
         [ActionName("save_msg")]
         [HttpPost]
-        public async Task<ActionResult<ChatMassage>> PostChatMassage([FromBody]ChatMsgViewModel chatMassage)
+        [ExceptionHandle("发送失败")]
+        public async Task<ActionResult<ApiResult>> PostChatMassage([FromBody]ChatMsgViewModel chatMassage)
         {
-            ChatMassage massage = new ChatMassage();
-            massage.Content = chatMassage.Content;
-            massage.MediaType = 0;
-            massage.RoomId = chatMassage.RoomId;
-            massage.CreateDate = DateTime.Now;
-            if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
+            try
             {
-                foreach (var item in HttpContext.User.Claims)
+                ChatMassage massage = new ChatMassage();
+                massage.Content = chatMassage.Content;
+                massage.MediaType = 0;
+                massage.RoomId = chatMassage.RoomId;
+                massage.CreateDate = DateTime.Now;
+                if (HttpContext.User.Identity.IsAuthenticated && HttpContext.User.Claims != null)
                 {
-                    if (item.Type == ClaimTypes.NameIdentifier)
+                    foreach (var item in HttpContext.User.Claims)
                     {
-                        massage.UserId = item.Value;
+                        if (item.Type == ClaimTypes.NameIdentifier)
+                        {
+                            massage.UserId = item.Value;
+                        }
                     }
                 }
+                _context.ChatMassages.Add(massage);
+                await _context.SaveChangesAsync();
             }
-            _context.ChatMassages.Add(massage);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetChatMassage", new { id = massage.Id }, massage);
+            catch (Exception ex)
+            {
+                return ApiResult.Fail("发送失败");
+            }
+            return ApiResult.Ok("发送成功");
         }
 
         // DELETE: api/ChatMsg/5

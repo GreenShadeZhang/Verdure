@@ -50,18 +50,18 @@ namespace GreenShade.Blog.Api.Controllers
         }
         [ActionName("article_detail")]
         [HttpGet]
-        public async Task<ActionResult<ArticleDto>> GetArticle(string id)
+        [ExceptionHandle("获取博客详情失败。")]
+        public async Task<ActionResult<ApiResult<ArticleDto>>> GetArticle(string id)
         {
-            var user = HttpContext.User;
             var article = await _context.GetArticle(id);
 
             if (article == null)
             {
-                return NotFound();
+                return ApiResult<ArticleDto>.Fail("获取博客详情失败");
             }
             var ret = new ArticleDto(article);
 
-            return ret;
+            return ApiResult<ArticleDto>.Ok(ret);
         }           
     }
 }

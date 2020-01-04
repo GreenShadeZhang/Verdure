@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using GreenShade.Blog.Api.Services;
-using GreenShade.Blog.DataAccess.Services;
 using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
 using GreenShade.Blog.Domain.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -47,7 +42,7 @@ namespace GreenShade.Blog.Api.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-              
+
                 var claims = new Claim[]
                {
                     new Claim(ClaimTypes.Name,user.UserName),
@@ -96,7 +91,7 @@ namespace GreenShade.Blog.Api.Controllers
                     _jwtSeetings.Audience,
                     claims,
                     DateTime.Now,
-                    DateTime.Now.AddMinutes(30),
+                    DateTime.Now.AddHours(30),
                     creds
                     );
                 return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
@@ -136,7 +131,7 @@ namespace GreenShade.Blog.Api.Controllers
                                 _jwtSeetings.Audience,
                                 claims,
                                 DateTime.Now,
-                                DateTime.Now.AddMinutes(30),
+                                DateTime.Now.AddHours(30),
                                 creds
                                 );
                             var userDto = new UserInfoDto(userInDb);
@@ -144,17 +139,17 @@ namespace GreenShade.Blog.Api.Controllers
                             return Ok(userDto);
                         }
                     }
-                   
-                    return Ok(user);
+
+                    return Ok(new UserInfoDto(null));
                 }
             }
-            return Ok(null);
+            return Ok(new UserInfoDto(null));
         }
 
 
         [HttpGet("account/get_user")]
         public async Task<IActionResult> GetLgin(string userId)
-        {          
+        {
             var user = await _userManager.FindByIdAsync(userId);
             var userDto = new UserInfoDto(user);
             return Ok(userDto);

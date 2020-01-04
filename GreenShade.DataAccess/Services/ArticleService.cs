@@ -20,7 +20,7 @@ namespace GreenShade.Blog.DataAccess.Services
             _context = context;
             _logger = logger;
         }
-        public async Task<List<Article>> GetArticlesByType(int type=0,int pi = 1, int ps = 10)
+        public async Task<List<Article>> GetArticlesByType(int type = 0, int pi = 1, int ps = 10)
         {
             try
             {
@@ -34,16 +34,16 @@ namespace GreenShade.Blog.DataAccess.Services
                 {
                     types.Add(1);
                 }
-                else if(type == 3)
+                else if (type == 3)
                 {
                     types.Add(0);
                     types.Add(1);
                     types.Add(-1);
                 }
                 var artList = await _context.Articles.Include(x => x.User)
-                    .OrderByDescending(a=>a.Type)
-                    .OrderByDescending(a=>a.ArticleDate)
-                    .Where(a => types.Contains(a.Type)&&a.Status!=-1)
+                    .OrderByDescending(a => a.Type)
+                    .OrderByDescending(a => a.ArticleDate)
+                    .Where(a => types.Contains(a.Type) && a.Status != -1)
                     .Skip((pi - 1) * ps).Take(ps).ToListAsync();
                 return artList;
             }
@@ -52,7 +52,7 @@ namespace GreenShade.Blog.DataAccess.Services
                 _logger.LogError("ef get Arts", ex);
             }
             return null;
-        }     
+        }
         public async Task<int> GetArticlesNumByType(int type)
         {
             int ret = 0;
@@ -74,7 +74,7 @@ namespace GreenShade.Blog.DataAccess.Services
                     types.Add(1);
                     types.Add(-1);
                 }
-                ret = await _context.Articles.Where(a => types.Contains(a.Type)&&a.Status!=-1).CountAsync();
+                ret = await _context.Articles.Where(a => types.Contains(a.Type) && a.Status != -1).CountAsync();
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace GreenShade.Blog.DataAccess.Services
             int ret = 0;
             try
             {
-                ret = await _context.Articles.Where(x=>x.Status==1).CountAsync();
+                ret = await _context.Articles.Where(x => x.Status == 1).CountAsync();
             }
             catch (Exception ex)
             {
@@ -100,14 +100,20 @@ namespace GreenShade.Blog.DataAccess.Services
         public async Task<Article> GetArticle(string id)
         {
             var article = await _context.Articles.FindAsync(id);
-            _context.Entry(article)
-        .Reference(b => b.User)
-        .Load();
-            if (article == null)
+            try
             {
-                return null;
+                if (article == null)
+                {
+                    return null;
+                }
+                _context.Entry(article)
+             .Reference(b => b.User)
+             .Load();
             }
+            catch (Exception ex)
+            {
 
+            }
             return article;
         }
 

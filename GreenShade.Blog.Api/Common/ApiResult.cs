@@ -27,7 +27,7 @@ namespace GreenShade.Blog.Api.Common
 
         public static ApiResult<T> Fail(string msg = "")
         {
-            return new ApiResult<T>() { Code = HttpStatusCode.OK, Msg = msg };
+            return new ApiResult<T>() { Code = HttpStatusCode.NoContent, Msg = msg };
         }
         public static ApiResult<T> Fail(HttpStatusCode code, string msg = "")
         {
