@@ -40,12 +40,12 @@ namespace GreenShade.Blog.Api
             services.AddSignalR();          
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));            
             services.Configure<QQLoginSetting>(Configuration.GetSection("qqlogin"));
-
+            services.AddHttpClient<ThirdLoginService>();
             services.AddScoped<ArticleService>();
             services.AddScoped<BlogManageService>();
-            services.AddScoped<WallpaperService>();
-            services.AddScoped<PushWnsService>();
-            services.AddScoped<ThirdLoginService>();
+            services.AddHttpClient<WallpaperService>();
+            services.AddHttpClient<PushWnsService>();
+            //services.AddScoped<ThirdLoginService>();
             var jwtSeetings = new JwtSeetings();
             //绑定jwtSeetings
             Configuration.Bind("JwtSeetings", jwtSeetings);

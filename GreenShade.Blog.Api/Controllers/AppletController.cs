@@ -67,9 +67,9 @@ namespace GreenShade.Blog.Api.Controllers
         [HttpGet]
         public async Task<string> PostChannel()
         {
-            string uri = "https://sg2p.notify.windows.com/?token=AwYAAADQCl9EgOdsNvLepNi8wZchyME9K0uTnM8NsEa0xdXj23E0ez1fCVoD0OiFUJiyUhxSEO%2b33J%2bV7ns%2fEJEYOuga%2fYnjfWAgjpLqJYW7h0HVDybrUmniAisYH5yR9jr2bSrcCmv%2f7nbMXTlIaGbc2mGb";
-            string secret = "secret";
-            string sid = "sid";
+            string uri = "https://sg2p.notify.windows.com/?token=AwYAAAC8wOyuJeZTkE%2btdaiWAxN3rs%2fscb8KWf4xV%2fD9gYwVMFgDl2yLhlXH%2fJ4x4aTIWA1MSpfLpzmslRfhuJsTgf0UkJYc6MEK5SVMRT89FA9zgoxMNqQXIqNZXo8TxN7TOAGRXUYlAYPGmJGcIKnhklBY";
+            string secret = "mgdMCK6*@wewwQLDK0313|:";
+            string sid = "ms-app://s-1-15-2-73882458-3227807263-4067040658-804817547-1359916503-4130225270-1080480494";
             string notificationType = "wns/toast";
             string contentType = "text/xml";
             string content =@"

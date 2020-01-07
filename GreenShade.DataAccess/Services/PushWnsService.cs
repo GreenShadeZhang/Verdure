@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -23,6 +24,11 @@ namespace GreenShade.Blog.DataAccess.Services
 
     public class PushWnsService
     {
+        private readonly HttpClient _httpClient;
+        public PushWnsService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
         // Post to WNS
         public async Task<string> PostToWnsAsync(string secret, string sid, string uri, string xml, string notificationType, string contentType)
         {
@@ -31,19 +37,30 @@ namespace GreenShade.Blog.DataAccess.Services
                 // You should cache this access token.
                 var accessToken = await GetAccessTokenAsync(secret, sid);
 
+
+                _httpClient.DefaultRequestHeaders.Add("X-WNS-Type", notificationType);
+                _httpClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", accessToken.AccessToken));
+                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+                //_httpClient.DefaultRequestHeaders.Add("Content-Type", contentType);
                 byte[] contentInBytes = Encoding.UTF8.GetBytes(xml);
+                //StringContent stringContent = new StringContent(xml,Encoding.UTF8);
+                ByteArrayContent byteArray = new ByteArrayContent(contentInBytes);
+                var res = await _httpClient.PostAsync(uri, byteArray);
+                var rescontent = res.Content.ReadAsStringAsync();
+                return res.StatusCode.ToString();
+                //byte[] contentInBytes = Encoding.UTF8.GetBytes(xml);
 
-                HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
-                request.Method = "POST";
-                request.Headers.Add("X-WNS-Type", notificationType);
-                request.ContentType = contentType;
-                request.Headers.Add("Authorization", String.Format("Bearer {0}", accessToken.AccessToken));
+                //HttpWebRequest request = HttpWebRequest.Create(uri) as HttpWebRequest;
+                //request.Method = "POST";
+                //request.Headers.Add("X-WNS-Type", notificationType);
+                //request.ContentType = contentType;
+                //request.Headers.Add("Authorization", String.Format("Bearer {0}", accessToken.AccessToken));
 
-                using (Stream requestStream = request.GetRequestStream())
-                    requestStream.Write(contentInBytes, 0, contentInBytes.Length);
+                //using (Stream requestStream = request.GetRequestStream())
+                //    requestStream.Write(contentInBytes, 0, contentInBytes.Length);
 
-                using (HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse())
-                    return webResponse.StatusCode.ToString();
+                //using (HttpWebResponse webResponse = (HttpWebResponse)request.GetResponse())
+                //return webResponse.StatusCode.ToString();
             }
 
             catch (WebException webException)
@@ -145,11 +162,9 @@ namespace GreenShade.Blog.DataAccess.Services
             };
             var postContent = new FormUrlEncodedContent(keyValues);
             string response;
-            using (var httpClient = new HttpClient())
-            {
-                var responseMessage = httpClient.PostAsync("https://login.live.com/accesstoken.srf", postContent);
+           
+                var responseMessage = _httpClient.PostAsync("https://login.live.com/accesstoken.srf", postContent);
                 response = await responseMessage.Result.Content.ReadAsStringAsync();
-            }
             return GetOAuthTokenFromJson(response);
         }
 
