@@ -10,6 +10,7 @@ using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace GreenShade.Blog.Api.Controllers
 {
@@ -17,12 +18,17 @@ namespace GreenShade.Blog.Api.Controllers
     [ApiController]
     public class AppletController : ControllerBase
     {
-        public AppletController(IConfiguration configuration, PushWnsService pushWnsService, WallpaperService wallpaperService)
+        public AppletController(IConfiguration configuration,
+            PushWnsService pushWnsService, 
+            WallpaperService wallpaperService,
+             IOptions<Dictionary<string,WnsSetting>> wnsSettingsOptions)
         {
             PushWnsService = pushWnsService;
             Configuration = configuration;
             WallpaperService = wallpaperService;
+            _wnsSetting = wnsSettingsOptions.Value;
         }
+        private readonly Dictionary<string, WnsSetting> _wnsSetting;
         public WallpaperService WallpaperService { get; }
         public IConfiguration Configuration { get; }
         public PushWnsService PushWnsService { get; }
@@ -63,13 +69,22 @@ namespace GreenShade.Blog.Api.Controllers
             HttpClient client = new HttpClient();
             string res = await client.GetStringAsync(url);
             return res;
-        }   
+        }
         [HttpGet]
-        public async Task<string> PostChannel()
+        public async Task<string> PostChannel(string key = "yunblog")
         {
+            WnsSetting wns = null;
+            if(_wnsSetting!=null&& _wnsSetting.Count>0&&_wnsSetting.ContainsKey(key))
+            {
+                wns = _wnsSetting[key];
+            }
+            if (wns == null)
+            {
+                return "error";
+            }
             string uri = "https://sg2p.notify.windows.com/?token=AwYAAAC8wOyuJeZTkE%2btdaiWAxN3rs%2fscb8KWf4xV%2fD9gYwVMFgDl2yLhlXH%2fJ4x4aTIWA1MSpfLpzmslRfhuJsTgf0UkJYc6MEK5SVMRT89FA9zgoxMNqQXIqNZXo8TxN7TOAGRXUYlAYPGmJGcIKnhklBY";
-            string secret = "mgdMCK6*@wewwQLDK0313|:";
-            string sid = "ms-app://s-1-15-2-73882458-3227807263-4067040658-804817547-1359916503-4130225270-1080480494";
+            string secret =wns.Secret;
+            string sid = wns.Sid;
             string notificationType = "wns/toast";
             string contentType = "text/xml";
             string content =@"

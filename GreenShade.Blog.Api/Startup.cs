@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using GreenShade.Blog.Api.Filters;
@@ -40,6 +41,7 @@ namespace GreenShade.Blog.Api
             services.AddSignalR();          
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));            
             services.Configure<QQLoginSetting>(Configuration.GetSection("qqlogin"));
+            services.Configure<Dictionary<string,WnsSetting>>(Configuration.GetSection("wns"));
             services.AddHttpClient<ThirdLoginService>();
             services.AddScoped<ArticleService>();
             services.AddScoped<BlogManageService>();
