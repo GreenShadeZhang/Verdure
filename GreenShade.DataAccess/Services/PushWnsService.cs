@@ -1,6 +1,9 @@
-﻿using System;
+﻿using GreenShade.Blog.DataAccess.Data;
+using GreenShade.Blog.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -8,8 +11,6 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-
 namespace GreenShade.Blog.DataAccess.Services
 {
     // Authorization
@@ -25,9 +26,51 @@ namespace GreenShade.Blog.DataAccess.Services
     public class PushWnsService
     {
         private readonly HttpClient _httpClient;
-        public PushWnsService(HttpClient httpClient)
+        public PushWnsService(HttpClient httpClient,
+            BlogSysContext context)
         {
             _httpClient = httpClient;
+            _context = context;
+        }
+        private readonly BlogSysContext _context;
+
+        public async Task<bool> InsertWnsPushUrl(WnsPushUrl wnsPushUrl)
+        {
+            bool ret = false;
+            try
+            {
+                wnsPushUrl.CreateDate = DateTime.Now;
+                wnsPushUrl.UpdateDate = DateTime.Now;
+                _context.WnsUrls.Add(wnsPushUrl);
+                await _context.SaveChangesAsync();
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ret;
+        }
+        public async Task<bool> UpdateWnsPushUrl(WnsPushUrl wnsPushUrl)
+        {
+            bool ret = false;
+            try
+            {
+                var wns=_context.WnsUrls.Where(w =>w.AppName==wnsPushUrl.AppName && w.DevFamily == wnsPushUrl.DevFamily).FirstOrDefault();
+                if (wns != null)
+                {
+                    wns.UpdateDate = DateTime.Now;
+                    wns.PushUrl = wnsPushUrl.PushUrl;
+                    _context.WnsUrls.Update(wns);
+                    await _context.SaveChangesAsync();
+                    ret = true;
+                }               
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return ret;
         }
         // Post to WNS
         public async Task<string> PostToWnsAsync(string secret, string sid, string uri, string xml, string notificationType, string contentType)
@@ -162,9 +205,9 @@ namespace GreenShade.Blog.DataAccess.Services
             };
             var postContent = new FormUrlEncodedContent(keyValues);
             string response;
-           
-                var responseMessage = _httpClient.PostAsync("https://login.live.com/accesstoken.srf", postContent);
-                response = await responseMessage.Result.Content.ReadAsStringAsync();
+
+            var responseMessage = _httpClient.PostAsync("https://login.live.com/accesstoken.srf", postContent);
+            response = await responseMessage.Result.Content.ReadAsStringAsync();
             return GetOAuthTokenFromJson(response);
         }
 

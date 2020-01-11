@@ -23,7 +23,7 @@ namespace GreenShade.Blog.Api.Filters
         {
             if (context.ExceptionHandled != true)
             {
-                context.Result = new JsonResult(new ApiResult() { Code = System.Net.HttpStatusCode.NoContent, Msg = _message, Result = "" });
+                context.Result = new JsonResult(new ApiResult<string> { Code = System.Net.HttpStatusCode.NoContent, Msg = _message, Result = "" });
                 context.ExceptionHandled = true;
             }             
         }

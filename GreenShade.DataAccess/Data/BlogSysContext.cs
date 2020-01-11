@@ -15,5 +15,7 @@ namespace GreenShade.Blog.DataAccess.Data
         public DbSet<Article> Articles { get; set; }
         public DbSet<ChatGroup> Groups { get; set; }
         public DbSet<ChatMassage> ChatMassages { get; set; }
+        public DbSet<WnsPushUrl> WnsUrls { get; set; }
+        
     }
 }

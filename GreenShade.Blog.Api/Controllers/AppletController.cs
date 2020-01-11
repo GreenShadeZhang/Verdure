@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GreenShade.Blog.Api.Common;
+using GreenShade.Blog.Api.Filters;
+using GreenShade.Blog.DataAccess.Data;
 using GreenShade.Blog.DataAccess.Services;
+using GreenShade.Blog.Domain;
 using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -19,19 +20,22 @@ namespace GreenShade.Blog.Api.Controllers
     public class AppletController : ControllerBase
     {
         public AppletController(IConfiguration configuration,
-            PushWnsService pushWnsService, 
+            PushWnsService pushWnsService,
             WallpaperService wallpaperService,
-             IOptions<Dictionary<string,WnsSetting>> wnsSettingsOptions)
+            BlogSysContext context,
+             IOptions<Dictionary<string, WnsSetting>> wnsSettingsOptions)
         {
             PushWnsService = pushWnsService;
             Configuration = configuration;
             WallpaperService = wallpaperService;
             _wnsSetting = wnsSettingsOptions.Value;
+            _context = context;
         }
         private readonly Dictionary<string, WnsSetting> _wnsSetting;
         public WallpaperService WallpaperService { get; }
         public IConfiguration Configuration { get; }
         public PushWnsService PushWnsService { get; }
+        private readonly BlogSysContext _context;
 
         [ActionName("bing")]
         [HttpGet]
@@ -70,11 +74,17 @@ namespace GreenShade.Blog.Api.Controllers
             string res = await client.GetStringAsync(url);
             return res;
         }
+
+        /// <summary>
+        /// 测试接口
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         [HttpGet]
         public async Task<string> PostChannel(string key = "yunblog")
         {
             WnsSetting wns = null;
-            if(_wnsSetting!=null&& _wnsSetting.Count>0&&_wnsSetting.ContainsKey(key))
+            if (_wnsSetting != null && _wnsSetting.Count > 0 && _wnsSetting.ContainsKey(key))
             {
                 wns = _wnsSetting[key];
             }
@@ -83,11 +93,11 @@ namespace GreenShade.Blog.Api.Controllers
                 return "error";
             }
             string uri = "https://sg2p.notify.windows.com/?token=AwYAAAC8wOyuJeZTkE%2btdaiWAxN3rs%2fscb8KWf4xV%2fD9gYwVMFgDl2yLhlXH%2fJ4x4aTIWA1MSpfLpzmslRfhuJsTgf0UkJYc6MEK5SVMRT89FA9zgoxMNqQXIqNZXo8TxN7TOAGRXUYlAYPGmJGcIKnhklBY";
-            string secret =wns.Secret;
+            string secret = wns.Secret;
             string sid = wns.Sid;
             string notificationType = "wns/toast";
             string contentType = "text/xml";
-            string content =@"
+            string content = @"
 <toast>
 <visual>
     <binding template='ToastGeneric'>
@@ -98,8 +108,56 @@ namespace GreenShade.Blog.Api.Controllers
     </binding>
   </visual>
 </toast>";
-            string res =await PushWnsService.PostToWnsAsync(secret, sid, uri, content, notificationType, contentType);
+            string res = await PushWnsService.PostToWnsAsync(secret, sid, uri, content, notificationType, contentType);
             return res;
-        }      
+        }
+
+
+
+        [HttpPost]
+        [ExceptionHandle("推送错误")]
+        public async Task<ActionResult<ApiResult<string>>> WnsChannel([FromBody]WnsPushArgs pushArgs)
+        {
+            WnsSetting wns = null;
+            string content = "";
+            string url = "";
+            if (_wnsSetting != null && _wnsSetting.Count > 0 && pushArgs != null && _wnsSetting.ContainsKey(pushArgs.AppName))
+            {
+                wns = _wnsSetting[pushArgs.AppName];
+                content = pushArgs.MsgContentXml;
+            }
+            if (wns == null)
+            {
+                return ApiResult<string>.Fail("参数异常");
+            }
+            var wnsObj= _context.WnsUrls.Where(w => w.AppName == pushArgs.AppName).OrderByDescending(w => w.UpdateDate).ToList().FirstOrDefault();
+            if (wnsObj != null)
+            {
+                url = wnsObj.PushUrl;
+            }           
+            string secret = wns.Secret;
+            string sid = wns.Sid;
+            string notificationType = "wns/toast";
+            string contentType = "text/xml";
+            await PushWnsService.PostToWnsAsync(secret, sid, url, content, notificationType, contentType);
+            return ApiResult<string>.Ok("推送成功");
+        }
+
+
+        [HttpPost]
+        [ExceptionHandle("保存错误")]
+        public async Task<ActionResult<ApiResult<string>>> WnsPush(WnsPushUrl wnsPushUrl)
+        {
+            if (wnsPushUrl == null)
+            {
+                return ApiResult<string>.Fail("参数错误");
+            }
+            bool res = _context.WnsUrls.Any(e =>e.AppName==wnsPushUrl.AppName&& e.DevFamily == wnsPushUrl.DevFamily) ? await PushWnsService.UpdateWnsPushUrl(wnsPushUrl) : await PushWnsService.InsertWnsPushUrl(wnsPushUrl);
+            if (!res)
+            {
+                return ApiResult<string>.Fail("保存出错");
+            }
+            return ApiResult<string>.Ok("保存成功");
+        }
     }
 }
