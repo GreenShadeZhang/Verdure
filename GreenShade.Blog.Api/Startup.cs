@@ -88,7 +88,7 @@ namespace GreenShade.Blog.Api
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .WithOrigins("http://192.168.1.109:4200", "http://localhost:4200", "http://192.168.1.103:4200",
-                    "http://192.168.1.103:4200", "http://192.168.16.67:4200", "http://192.168.16.138:4200")
+                    "http://192.168.1.103:4200", "http://192.168.16.67:4200", "http://192.168.16.138:4200", "https://www.douwp.club")
                     .AllowCredentials()//指定处理cookie
                     .SetPreflightMaxAge(TimeSpan.FromSeconds(60));
                 });

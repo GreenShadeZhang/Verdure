@@ -15,6 +15,7 @@ using System;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 
 namespace GreenShade.Blog.Api.Services
 {
@@ -24,17 +25,20 @@ namespace GreenShade.Blog.Api.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly QQLoginSetting _qqSettings;
         private readonly HttpClient _http;
+        private ILogger<ThirdLoginService> _logger;
         public IConfiguration Configuration { get; }
         public ThirdLoginService(IConfiguration configuration, SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
              IOptions<QQLoginSetting> qqSettingsOptions,
-             HttpClient http)
+             HttpClient http,
+             ILogger<ThirdLoginService> logger)
         {
             Configuration = configuration;
             _signInManager = signInManager;
             _userManager = userManager;
             _qqSettings = qqSettingsOptions.Value;
             _http = http;
+            _logger = logger;
         }
         public async Task<ApplicationUser> QQLogin(string code)
         {
@@ -46,6 +50,7 @@ namespace GreenShade.Blog.Api.Services
         {
             ApplicationUser applicationUser = null;
             string openid = await GetUserIdentifierAsync(accessToken);
+            _logger.LogInformation(openid);
             if (!string.IsNullOrWhiteSpace(openid))
             {
                 applicationUser = await _userManager.FindByLoginAsync("QQ", openid);
@@ -148,11 +153,15 @@ namespace GreenShade.Blog.Api.Services
                 { "code", code },
                 { "grant_type", "authorization_code" },
             };
+            _logger.LogInformation("client_id"+_qqSettings.client_id);
+            _logger.LogInformation("redirect_uri" + _qqSettings.redirect_uri);
+            _logger.LogInformation("secret" + _qqSettings.client_secret);
             var requestContent = new FormUrlEncodedContent(tokenRequestParameters);
             var response = await _http.PostAsync(QQAuthenticationDefaults.TokenEndpoint, requestContent);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var content = QueryHelpers.ParseQuery(await response.Content.ReadAsStringAsync());
+                _logger.LogInformation("res_ex", content);
                 var payload = await CopyPayloadAsync(content);
                 return OAuthTokenResponse.Success(payload);
             }
