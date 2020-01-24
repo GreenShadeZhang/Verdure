@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using GreenShade.Blog.Api.Filters;
 using GreenShade.Blog.Api.Services;
 using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
@@ -70,6 +71,7 @@ namespace GreenShade.Blog.Api.Controllers
 
 
         [HttpPost("account/register")]
+        [ExceptionHandle("注册失败请重试")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
 
@@ -100,6 +102,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
         [HttpPost("account/third_login")]
+        [ExceptionHandle("第三方登录失败请重试")]
         public async Task<IActionResult> ThirdLgin([FromBody]ThirdLoginViewModel model)
         {
             if (string.IsNullOrEmpty(model.Code))

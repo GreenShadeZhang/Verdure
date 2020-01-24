@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using GreenShade.Blog.Api.Filters;
@@ -11,6 +12,7 @@ using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -32,16 +34,20 @@ namespace GreenShade.Blog.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownProxies.Add(IPAddress.Parse("10.0.0.100"));
+            });
             services.AddDbContext<AppIdentityDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
             services.AddDbContext<BlogSysContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
-            services.AddSignalR();          
-            services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));            
+            services.AddSignalR();
+            services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
             services.Configure<QQLoginSetting>(Configuration.GetSection("qqlogin"));
-            services.Configure<Dictionary<string,WnsSetting>>(Configuration.GetSection("wns"));
+            services.Configure<Dictionary<string, WnsSetting>>(Configuration.GetSection("wns"));
             services.AddHttpClient<ThirdLoginService>();
             services.AddScoped<ArticleService>();
             services.AddScoped<BlogManageService>();
@@ -106,6 +112,11 @@ namespace GreenShade.Blog.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseCors("any");
             app.UseWebSockets();
             app.UseRouting();
