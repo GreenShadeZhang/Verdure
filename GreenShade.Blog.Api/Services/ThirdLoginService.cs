@@ -42,6 +42,7 @@ namespace GreenShade.Blog.Api.Services
         }
         public async Task<ApplicationUser> QQLogin(string code)
         {
+            _logger.LogInformation("welcome");
             var accessToken = await ExchangeCodeAsync(code);
             return await GetUserInfoAsync(accessToken);
         }

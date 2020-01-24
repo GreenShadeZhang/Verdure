@@ -10,6 +10,7 @@ using GreenShade.Blog.Domain.Models;
 using GreenShade.Blog.Domain.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -23,17 +24,20 @@ namespace GreenShade.Blog.Api.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ThirdLoginService _thirdLogin;
         private readonly JwtSeetings _jwtSeetings;
+        private ILogger<AccountController> _logger;
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
              ThirdLoginService thirdLogin,
-            IOptions<JwtSeetings> jwtSeetingsOptions
+            IOptions<JwtSeetings> jwtSeetingsOptions,
+            ILogger<AccountController> logger
            )
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _thirdLogin = thirdLogin;
             _jwtSeetings = jwtSeetingsOptions.Value;
+            _logger = logger;
         }
 
         [HttpPost("account/login")]
@@ -105,6 +109,7 @@ namespace GreenShade.Blog.Api.Controllers
         [ExceptionHandle("第三方登录失败请重试")]
         public async Task<IActionResult> ThirdLgin([FromBody]ThirdLoginViewModel model)
         {
+            _logger.LogInformation("login third_login");
             if (string.IsNullOrEmpty(model.Code))
             {
                 return BadRequest();
