@@ -11,6 +11,7 @@ using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace GreenShade.Blog.Api.Controllers
@@ -23,6 +24,7 @@ namespace GreenShade.Blog.Api.Controllers
             PushWnsService pushWnsService,
             WallpaperService wallpaperService,
             BlogSysContext context,
+             ILogger<AppletController> logger,
              IOptions<Dictionary<string, WnsSetting>> wnsSettingsOptions)
         {
             PushWnsService = pushWnsService;
@@ -30,7 +32,9 @@ namespace GreenShade.Blog.Api.Controllers
             WallpaperService = wallpaperService;
             _wnsSetting = wnsSettingsOptions.Value;
             _context = context;
+            _logger = logger;
         }
+        private ILogger<AppletController> _logger;
         private readonly Dictionary<string, WnsSetting> _wnsSetting;
         public WallpaperService WallpaperService { get; }
         public IConfiguration Configuration { get; }
@@ -41,6 +45,7 @@ namespace GreenShade.Blog.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResult<List<WallpapersDetail>>>> GetBing()
         {
+            _logger.LogInformation("sql_string:" + Configuration.GetConnectionString("OffLineNpgSqlCon"));
             List<WallpapersDetail> picModels = new List<WallpapersDetail>();
             WallpapersData wallPaperModel = await WallpaperService.GetWallparper(0, 6);
             //通过重新组装成集合给GridView
