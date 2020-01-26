@@ -3,11 +3,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using GreenShade.Blog.Api.Common;
 using GreenShade.Blog.Api.Filters;
 using GreenShade.Blog.Api.Services;
 using GreenShade.Blog.Domain.Dto;
 using GreenShade.Blog.Domain.Models;
 using GreenShade.Blog.Domain.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,7 @@ namespace GreenShade.Blog.Api.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ThirdLoginService _thirdLogin;
         private readonly JwtSeetings _jwtSeetings;
         private ILogger<AccountController> _logger;
@@ -30,7 +33,9 @@ namespace GreenShade.Blog.Api.Controllers
             SignInManager<ApplicationUser> signInManager,
              ThirdLoginService thirdLogin,
             IOptions<JwtSeetings> jwtSeetingsOptions,
-            ILogger<AccountController> logger
+            ILogger<AccountController> logger,
+            RoleManager<IdentityRole> roleManager
+
            )
         {
             _userManager = userManager;
@@ -38,6 +43,7 @@ namespace GreenShade.Blog.Api.Controllers
             _thirdLogin = thirdLogin;
             _jwtSeetings = jwtSeetingsOptions.Value;
             _logger = logger;
+            _roleManager = roleManager;
         }
 
         [HttpPost("account/login")]
@@ -162,5 +168,23 @@ namespace GreenShade.Blog.Api.Controllers
             var userDto = new UserInfoDto(user);
             return Ok(userDto);
         }
+        ////[Authorize]
+        //[HttpGet("account/create_role")]
+        //[Authorize(Roles = "Admin")]
+        //public async Task<ApiResult<string>> CreateRole(string userid, string role)
+        //{
+        //    var user = await _userManager.FindByIdAsync(userid);
+        //    try
+        //    {
+        //        await _roleManager.CreateAsync(new IdentityRole(role));
+        //        await _userManager.AddToRoleAsync(user, role);
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //    return ApiResult<string>.Ok("创建成功");
+        //}
     }
 }

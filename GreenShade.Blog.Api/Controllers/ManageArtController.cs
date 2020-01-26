@@ -25,7 +25,9 @@ namespace GreenShade.Blog.Api.Controllers
             _managecontext = context;
         }
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [ActionName("arts")]
+
         [HttpGet]
         public async Task<ActionResult<ArticleListDto>> GetArticles(int status = 0, int pi = 1, int ps = 10)
         {
@@ -71,7 +73,9 @@ namespace GreenShade.Blog.Api.Controllers
 
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [ActionName("create_article")]
+
         [HttpPost]
         public async Task<ActionResult<Article>> PostArticle([FromForm]Article article)
         {
@@ -90,6 +94,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [ActionName("update_article")]
         [HttpPost]
         [ExceptionHandle("更新失败。")]
@@ -110,6 +115,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [ActionName("change_article_status")]
         [HttpPost]
         public async Task<ActionResult<Article>> ChangeArticleStatus([FromBody]ChangeArtStatusArgs art)
@@ -126,6 +132,7 @@ namespace GreenShade.Blog.Api.Controllers
 
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [ActionName("change_article_type")]
         [HttpPost]
         public async Task<ActionResult<Article>> ChangeArticleType([FromBody]ChangeArtTypeArgs art)
@@ -139,18 +146,19 @@ namespace GreenShade.Blog.Api.Controllers
             }
             return Ok();
         }
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Article>> DeleteArticle(string id)
-        {
-            var article = await _managecontext.DeleteArticle(id);
-            return article;
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<Article>> DeleteArticle(string id)
+        //{
+        //    var article = await _managecontext.DeleteArticle(id);
+        //    return article;
+        //}
 
         private bool ArticleExists(string id)
         {
             return _managecontext.ArticleExists(id);
         }
         [Authorize]
+        [Authorize(Roles = "Admin")]
         [ActionName("import_article")]
         [HttpPost]
         [ExceptionHandle("导入失败。")]
