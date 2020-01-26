@@ -24,7 +24,7 @@ namespace GreenShade.Blog.Api.Controllers
         {
             _managecontext = context;
         }
-        [Authorize]
+        //[Authorize]
         [Authorize(Roles = "Admin")]
         [ActionName("arts")]
 
@@ -72,7 +72,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [Authorize(Roles = "Admin")]
         [ActionName("create_article")]
 
@@ -93,7 +93,7 @@ namespace GreenShade.Blog.Api.Controllers
             return CreatedAtAction("GetArticle", new { id = article.Id }, article);
         }
 
-        [Authorize]
+        //[Authorize]
         [Authorize(Roles = "Admin")]
         [ActionName("update_article")]
         [HttpPost]
@@ -114,7 +114,7 @@ namespace GreenShade.Blog.Api.Controllers
 
         }
 
-        [Authorize]
+        //[Authorize]
         [Authorize(Roles = "Admin")]
         [ActionName("change_article_status")]
         [HttpPost]
@@ -131,7 +131,7 @@ namespace GreenShade.Blog.Api.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [Authorize(Roles = "Admin")]
         [ActionName("change_article_type")]
         [HttpPost]
@@ -157,7 +157,7 @@ namespace GreenShade.Blog.Api.Controllers
         {
             return _managecontext.ArticleExists(id);
         }
-        [Authorize]
+        //[Authorize]
         [Authorize(Roles = "Admin")]
         [ActionName("import_article")]
         [HttpPost]
