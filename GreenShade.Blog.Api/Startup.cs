@@ -43,6 +43,7 @@ namespace GreenShade.Blog.Api
             services.AddDbContext<BlogSysContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("OffLineNpgSqlCon")));
             services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
             services.AddSignalR();
             services.Configure<JwtSeetings>(Configuration.GetSection("JwtSeetings"));
