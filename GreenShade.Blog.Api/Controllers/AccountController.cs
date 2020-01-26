@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -129,14 +130,24 @@ namespace GreenShade.Blog.Api.Controllers
 
                     if (user != null)
                     {
-                        var userInDb = await _userManager.FindByIdAsync(user.Id);
+                        var userInDb = await _userManager.FindByIdAsync(user.Id);                        
                         if (userInDb != null && !string.IsNullOrEmpty(userInDb.Id))
                         {
-                            var claims = new Claim[]
+                          IList<string>  roles=  await _userManager.GetRolesAsync(userInDb);
+                            var claims = new List<Claim>
               {
                     new Claim(ClaimTypes.Name,userInDb.UserName),
                     new Claim(ClaimTypes.NameIdentifier,userInDb.Id)
               };
+
+                            if (roles != null && roles.Count > 0)
+                            {
+                                foreach (var role in roles)
+                                {
+                                    var roleClaim = new Claim(ClaimTypes.Role, role);
+                                    claims.Add(roleClaim);
+                                }
+                            }
                             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSeetings.SecretKey));
                             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
