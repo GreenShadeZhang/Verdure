@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Verdure.ApplicationCore
+{
+    public class Constants
+    {
+        public class TableNames
+        {
+            public const string Blogs = "Blogs";
+        }
+    }
+}
