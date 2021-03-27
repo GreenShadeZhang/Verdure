@@ -14,12 +14,22 @@ import {MatListModule} from '@angular/material/list';
 import {MatCardModule} from '@angular/material/card';
 import { MarkdownModule } from 'ngx-markdown';
 import { BlogDetailComponent } from './blog-detail/blog-detail.component';
+import { RootNavBarComponent } from './root-nav-bar/root-nav-bar.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { NavBoardComponent } from './nav-board/nav-board.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatMenuModule } from '@angular/material/menu';
+import { IconMenuComponent } from './icon-menu/icon-menu.component';
 @NgModule({
-  declarations: [					
+  declarations: [						
     AppComponent,
       RootNavComponent,
       BlogListComponent,
-      BlogDetailComponent
+      BlogDetailComponent,
+      RootNavBarComponent,
+      NavBoardComponent,
+      IconMenuComponent
    ],
   imports: [
     MatSliderModule,
@@ -32,7 +42,11 @@ import { BlogDetailComponent } from './blog-detail/blog-detail.component';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MarkdownModule.forRoot({loader:HttpClient})
+    MarkdownModule.forRoot({loader:HttpClient}),
+    LayoutModule,
+    MatSidenavModule,
+    MatGridListModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
