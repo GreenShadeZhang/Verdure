@@ -5,9 +5,9 @@
       [opened]="false">
     <mat-toolbar *ngIf="isHandset$ | async">Menu</mat-toolbar>
     <mat-nav-list *ngIf="isHandset$ | async">
-      <a mat-list-item routerLink="blog-list">博客列表</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
+      <a mat-list-item (click)="drawer.close()" routerLink="blog-list">博客列表</a>
+      <a mat-list-item (click)="drawer.close()" href="#">Link 2</a>
+      <a mat-list-item (click)="drawer.close()" href="#">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -20,13 +20,22 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>verdure-angular</span>
+      <button mat-button routerLink="/">
+        <span>
+        <img src="../assets/PlantMapLogo.png" style="height: 40px; vertical-align: middle;">
+        <span style="margin: 4px;">Verdure</span>
+      </span>
+    </button>
       <button mat-button *ngIf="(isHandset$ | async)===false" routerLink="blog-list">博客列表</button>
       <span class="example-spacer"></span>
       <button mat-button *ngIf="(isHandset$ | async)===false">
         <mat-icon>4k</mat-icon>
         <span>Redial</span>
       </button>
+      <button routerLink="settings" mat-button *ngIf="(isHandset$ | async)===false">
+        <mat-icon>settings</mat-icon>
+      </button>
+
       <app-icon-menu *ngIf="isHandset$ | async"></app-icon-menu>
     </mat-toolbar>
     <!-- Add Content Here -->

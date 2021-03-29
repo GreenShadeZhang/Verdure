@@ -21,15 +21,19 @@ import { NavBoardComponent } from './nav-board/nav-board.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatMenuModule } from '@angular/material/menu';
 import { IconMenuComponent } from './icon-menu/icon-menu.component';
+import { SettingsComponent } from './settings/settings.component';
+import { HomeComponent } from './home/home.component';
 @NgModule({
-  declarations: [						
+  declarations: [								
     AppComponent,
       RootNavComponent,
       BlogListComponent,
       BlogDetailComponent,
       RootNavBarComponent,
       NavBoardComponent,
-      IconMenuComponent
+      IconMenuComponent,
+      SettingsComponent,
+      HomeComponent
    ],
   imports: [
     MatSliderModule,
