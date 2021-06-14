@@ -1,0 +1,32 @@
+<div class="container">
+	<div nz-row nzType="flex" nzJustify="center">
+			<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+				<nz-form-item>
+				  <nz-form-control nzErrorTip="请输入邮箱">
+					<nz-input-group nzPrefixIcon="user">
+					  <input type="text" nz-input formControlName="Email" placeholder="Email" />
+					</nz-input-group>
+				  </nz-form-control>
+				</nz-form-item>
+				<nz-form-item>
+				  <nz-form-control nzErrorTip="请输入密码">
+					<nz-input-group nzPrefixIcon="lock">
+					  <input type="password" nz-input formControlName="password" placeholder="密码" />
+					</nz-input-group>
+				  </nz-form-control>
+				</nz-form-item>
+				<nz-form-item>
+				  <nz-form-control>
+					<label nz-checkbox formControlName="remember">
+					  <span>记住密码</span>
+					</label>
+					<a class="login-form-forgot" class="login-form-forgot">忘记密码</a>
+					<button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
+					Or
+					<a [routerLink]='["/register"]'>现在注册</a>
+				  </nz-form-control>
+				</nz-form-item>
+			  </form>
+		</div>			
+</div>
+

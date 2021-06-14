@@ -1,0 +1,42 @@
+<div class="container">
+  <ngb-carousel *ngIf="banner">
+    <ng-template ngbSlide *ngFor="let item of banner">
+      <div class="picsum-img-wrapper">
+        <img [src]="item.source" alt="Random first slide">
+      </div>
+      <div class="carousel-caption">
+        <p>{{item.title}}</p>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+  <nz-list [nzDataSource]="arts" [nzRenderItem]="item" [nzHeader]="headerTemplate"
+    [nzGrid]="{ gutter: 16, span: 8,xs: 24,sm: 12, md: 8, lg: 8, xl: 8 }">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent">
+        <ng-template #nzContent>
+          <nz-card [nzBordered]="false" nzTitle="{{item.title}}">
+            <p>作者：{{item.nickName}}</p>
+            <p>时间：{{item.articleDate | date:'short'}}</p>
+            <p><a [routerLink]="['/alist',item.id]">查看详情</a></p>
+          </nz-card>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template #extraTemplate>
+      <a>查看详情</a>
+    </ng-template>
+    <ng-template #headerTemplate>
+      <div nz-row>
+        <div nz-col [nzSpan]="24">
+          <h3>热门博客</h3>
+        </div>
+      </div>
+    </ng-template>
+  </nz-list>
+  <div class="page-style">
+    <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="total" (nzPageSizeChange)="PageSize($event)"
+      (nzPageIndexChange)="changePageIndex($event)" [nzPageSizeOptions]="[6, 9, 15, 21]" nzShowSizeChanger
+      [nzHideOnSinglePage]='true' [nzPageSize]="pageSize">
+    </nz-pagination>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+.demo-infinite-container {
+    height: 360px;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+  }
+
+  nz-list {
+    padding: 12px;
+  }
+  nz-avatar{
+    float: right;
+  }
+  [nz-button] {
+    margin-right: 8px;
+    margin-bottom: 12px;
+  }

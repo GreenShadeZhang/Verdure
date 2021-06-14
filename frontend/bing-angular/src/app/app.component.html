@@ -1,0 +1,91 @@
+<!-- <nz-layout>
+      <app-nav></app-nav>
+      <nz-content>
+          <router-outlet></router-outlet>
+      </nz-content>
+      <nz-footer>云端blog</nz-footer>
+</nz-layout> -->
+
+<nz-layout class="layout">
+  <nz-sider
+    nzTheme="light"
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzBreakpoint]="'lg'"
+    [nzCollapsedWidth]="0"
+    [nzZeroTrigger]="zeroTrigger"
+  >
+    <div class="logo">
+     <!-- <a [routerLink]='["/"]'>
+      <i nz-icon nzType="windows" 
+      style="font-size: 16px; color: #08c;"
+      nzTheme="outline"></i>     
+     </a>   
+     <span style="vertical-align:middle;">云端博客</span>   -->
+    </div>
+    <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-menu-item>
+        <a [routerLink]='["/"]' [routerLinkActive]='["link-active"]'>
+          <i nz-icon nzType="home" nzTheme="outline"></i>
+          <span >首页</span>
+        </a>
+        
+      </li>
+      <li nz-menu-item>
+        <a [routerLink]='["/chat"]' [routerLinkActive]='["link-active"]'>
+          <i nz-icon nzType="qq" nzTheme="outline"></i>
+          <span >聊天室</span>
+        </a>
+        
+      </li>
+      <li nz-menu-item >
+        <a [routerLink]='["/alist"]' [routerLinkActive]='["link-active"]'>
+          <i nz-icon nzType="read" nzTheme="outline"></i>
+          <span>博客列表</span>
+        </a>        
+      </li>
+      <li nz-menu-item *ngIf="!single.getLogin()">
+        <a [routerLink]='["/third-login"]' [routerLinkActive]='["link-active"]'> 
+          <i nz-icon nzType="login" nzTheme="outline"></i>
+          <span>登录</span></a>       
+      </li>
+      <li nz-menu-item *ngIf="single.getLogin()">
+        <a [routerLink]='["/myinfo"]' [routerLinkActive]='["link-active"]'>
+          <i nz-icon nzType="user"></i>
+          <span>我的信息</span>
+        </a>
+        
+      </li>
+      <li nz-menu-item>
+        <a [routerLink]='["/about"]' [routerLinkActive]='["link-active"]'>
+          <i nz-icon nzType="info-circle" nzTheme="outline"></i>
+          <span>关于</span>
+        </a>
+        
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <app-nav>
+
+      </app-nav>
+    </nz-header>
+    <nz-content>
+        <router-outlet></router-outlet>    
+    </nz-content>
+    <nz-footer>
+      <div>
+        <div>
+          Powered by .NET Core 3.1.0 on Linux
+        </div>
+        <div>
+          云端blog
+        </div>        
+      </div>
+       </nz-footer>
+  </nz-layout>
+</nz-layout>
+<ng-template #zeroTrigger>
+  <i nz-icon nzType="menu-fold" nzTheme="outline"></i>
+</ng-template>

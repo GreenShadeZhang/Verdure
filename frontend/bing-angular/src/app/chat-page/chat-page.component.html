@@ -1,0 +1,34 @@
+<div class="container">
+  <h2>聊天室列表</h2>
+  <nz-list [nzDataSource]="groupList" [nzRenderItem]="item" [nzGrid]="{ gutter: 16, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent">
+        <ng-template #nzContent>
+          <nz-card nzTitle="{{item.title}}">           
+            <p> {{ item.title }}</p>
+            <br>
+            <button nz-button (click)="joingroup(item)" nzType="default">进入聊天室</button>        
+          </nz-card>
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
+    <!-- <div>
+        <form (ngSubmit)="onSubmit()" #siteForm="ngForm">
+            <div class="form-group">
+              <label for="email">组名</label>
+              <input id="email" type="text" class="form-control" [(ngModel)]="groupName" name="groupName" placeholder="请输入组名" required autofocus>
+              <div class="invalid-feedback">
+                Email is invalid
+              </div>
+            </div>        
+            <div class="form-group m-0">
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="!siteForm.form.valid">
+              添加
+              </button>
+            </div>						
+          </form>
+    </div> -->
+  
+</div>
+

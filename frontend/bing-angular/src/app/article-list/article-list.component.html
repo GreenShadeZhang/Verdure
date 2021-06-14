@@ -1,0 +1,29 @@
+<div class="container">
+  <nz-list [nzDataSource]="arts" [nzItemLayout]="'vertical'" [nzRenderItem]="item" [nzPagination]="pagination"
+    [nzFooter]="footer">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="'封面介绍：'+item.picInfo" [nzExtra]="extra">
+        <ng-template #starAction><i nz-icon nzType="star-o" style="margin-right: 8px;"></i> 156</ng-template>
+        <ng-template #likeAction><i nz-icon nzType="like-o" style="margin-right: 8px;"></i> 156</ng-template>
+        <ng-template #msgAction><i nz-icon nzType="message" style="margin-right: 8px;"></i> 2</ng-template>
+        <nz-list-item-meta [nzAvatar]="item.avatar" [nzTitle]="nzTitle"
+          [nzDescription]="'作者：'+item.nickName+' 时间：'+(item.articleDate | date:'short')">
+          <ng-template #nzTitle><a [routerLink]="['/alist',item.id]"
+              routerLinkActive="router-link-active">{{ item.title }}</a></ng-template>
+        </nz-list-item-meta>
+        <ng-template #extra>
+          <img width="272" alt="logo" src="{{item.picUrl}}"
+            onerror="this.src='../../assets/back.svg';this.onerror=null" />
+        </ng-template>
+      </nz-list-item>
+    </ng-template>
+    <ng-template #footer>
+      <div><b>云端BLOG 博客列表</b></div>
+    </ng-template>
+    <ng-template #pagination>
+      <nz-pagination [nzPageIndex]="pageIndex" [nzTotal]="total" (nzPageSizeChange)="PageSize($event)"
+        (nzPageIndexChange)="changePageIndex($event)" [nzPageSizeOptions]="[5, 10, 15, 20]" nzShowSizeChanger
+        [nzPageSize]="pageSize"></nz-pagination>
+    </ng-template>
+  </nz-list>
+</div>

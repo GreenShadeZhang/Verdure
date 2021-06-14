@@ -1,0 +1,24 @@
+<nz-card style="width:300px;" [nzCover]="coverTemplate" [nzActions]="[actionSetting, actionEdit, actionEllipsis]">
+  <nz-card-meta nzTitle="{{user.nickName}}" nzDescription="{{user.province}} {{user.city}}" [nzAvatar]="avatarTemplate">
+  </nz-card-meta>
+</nz-card>
+<ng-template #avatarTemplate>
+  <nz-avatar nzSrc="{{user.avatar}}"></nz-avatar>
+</ng-template>
+<ng-template #coverTemplate>
+  <img alt="example" src="{{user.avatar}}" />
+</ng-template>
+<ng-template #actionSetting>
+  <i nz-icon nzType="setting"></i>
+</ng-template>
+<ng-template #actionEdit>
+  <i nz-icon nzType="edit"></i>
+</ng-template>
+<ng-template #actionEllipsis>
+  <i nz-icon nzType="logout"  (click)="loginout()" nzTheme="outline"></i>
+</ng-template>
+
+<!-- <p>
+  my-info works!
+  <button (click)="loginout()">退出登录</button>
+</p> -->

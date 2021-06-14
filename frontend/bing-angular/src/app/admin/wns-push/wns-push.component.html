@@ -1,0 +1,33 @@
+<div class="container">
+  <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm(validateForm.value)">
+    <nz-form-item>
+      <div nz-row nzType="flex" nzJustify="left">
+        <nz-form-label [nzSpan]="8" nzRequired>选择app</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <nz-select formControlName="AppName" nzAllowClear="false" nzPlaceHolder="选择app">
+            <nz-option nzValue="YunWeather" nzLabel="云端天气"></nz-option>
+            <nz-option nzValue="yunblog" nzLabel="云端博客"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+    <nz-form-item>
+      <div nz-row nzType="flex" nzJustify="left">
+        <nz-form-label [nzSpan]="8" nzRequired>推送内容xml</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <textarea spellcheck="false" formControlName="MsgContentXml" nz-input rows="16" placeholder="输入内容"></textarea>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+    <nz-form-item>
+      <div nz-row nzType="flex" nzJustify="left">
+        <nz-form-label [nzSpan]="8" nzRequired>推送按钮</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <button nz-button class="login-form-button"
+          [disabled]="!validateForm.valid"
+          [nzType]="'primary'">推送</button>
+        </nz-form-control>
+      </div>
+    </nz-form-item>
+  </form>
+</div>
