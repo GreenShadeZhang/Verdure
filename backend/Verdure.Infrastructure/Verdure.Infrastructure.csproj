@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
@@ -10,9 +10,8 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.12.1" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Verdure.ApplicationCore\Verdure.ApplicationCore.csproj" />
+    <ProjectReference Include="..\Verdure.Core\Verdure.Core.csproj" />
   </ItemGroup>
 
 </Project>

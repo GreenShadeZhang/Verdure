@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Verdure.ApplicationCore;
+using Verdure.Core;
 
 namespace Verdure.Infrastructure
 {
