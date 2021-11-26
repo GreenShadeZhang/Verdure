@@ -1,32 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Verdure.Core
 {
-   public class Article
+    public class Article
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        /// <summary>
+        /// 标识Id
+        /// </summary>
         public string Id { get; set; }
-        public string UserId { get; set; }
+        /// <summary>
+        /// 标题
+        /// </summary>
         public string Title { get; set; }
+        /// <summary>
+        /// 内容
+        /// </summary>
         public string Content { get; set; }
-        public int ArticleViews { get; set; }
-        public int ArticleCommentCount { get; set; }
-        public DateTime ArticleDate { get; set; }
-        public int ArticleLikeCount { get; set; }
+        /// <summary>
+        /// 标签
+        /// </summary>
+        public string Tags { get; set; }
+        /// <summary>
+        /// 类别
+        /// </summary>
+        public string Category { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTimeOffset CreateDate { get; set; }
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public string UserId { get; set; }
         /// <summary>
         /// 0为默认 1为热门 -1为删除
         /// </summary>
         public int Status { get; set; }
-        public string PicUrl { get; set; }
-        public string PicInfo { get; set; }
-        public string Tag { get; set; }
-        public int Type { get; set; }
-        /// <summary>
-        /// 此导航属性 ApplicationUser类型 对应数据库里的AspNetUsers表
-        /// </summary>
-        public virtual ApplicationUser User { get; set; }
     }
 }

@@ -9,13 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenShade.Blog.Domain", "G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenShade.Blog.Api", "GreenShade.Blog.Api\GreenShade.Blog.Api.csproj", "{45F598AD-560B-4A71-BEA8-09C41254434E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Api", "Verdure.Api\Verdure.Api.csproj", "{610B76E0-8588-4B26-9BE1-22EA6BB02FFE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Core", "Verdure.Core\Verdure.Core.csproj", "{3841658A-BF5F-412C-90DD-2D43B9E1A2AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Infrastructure", "Verdure.Infrastructure\Verdure.Infrastructure.csproj", "{2A2DC7A9-7EF0-40BB-8C3D-C8C11F3ACF9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdure.Angular.Web", "Verdure.Angular.Web\Verdure.Angular.Web.csproj", "{CB01BBDA-FFDF-4864-A236-991F4FDD8440}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Angular.Web", "Verdure.Angular.Web\Verdure.Angular.Web.csproj", "{CB01BBDA-FFDF-4864-A236-991F4FDD8440}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdure.Data.Mongo", "Verdure.Data.Mongo\Verdure.Data.Mongo.csproj", "{8952C909-8469-4172-9F9D-E3D997443A41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdure.Api", "Verdure.Api\Verdure.Api.csproj", "{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +37,6 @@ Global
 		{45F598AD-560B-4A71-BEA8-09C41254434E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45F598AD-560B-4A71-BEA8-09C41254434E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45F598AD-560B-4A71-BEA8-09C41254434E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{610B76E0-8588-4B26-9BE1-22EA6BB02FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{610B76E0-8588-4B26-9BE1-22EA6BB02FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{610B76E0-8588-4B26-9BE1-22EA6BB02FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{610B76E0-8588-4B26-9BE1-22EA6BB02FFE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3841658A-BF5F-412C-90DD-2D43B9E1A2AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3841658A-BF5F-412C-90DD-2D43B9E1A2AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3841658A-BF5F-412C-90DD-2D43B9E1A2AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +49,14 @@ Global
 		{CB01BBDA-FFDF-4864-A236-991F4FDD8440}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB01BBDA-FFDF-4864-A236-991F4FDD8440}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB01BBDA-FFDF-4864-A236-991F4FDD8440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8952C909-8469-4172-9F9D-E3D997443A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8952C909-8469-4172-9F9D-E3D997443A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8952C909-8469-4172-9F9D-E3D997443A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8952C909-8469-4172-9F9D-E3D997443A41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

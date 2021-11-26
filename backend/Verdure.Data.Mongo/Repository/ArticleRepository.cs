@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Verdure.Core.Interfaces
+namespace Verdure.Data.Mongo.Repository
 {
-    public interface IAggregateRoot
-    { }
+    internal class ArticleRepository
+    {
+    }
 }

@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Verdure.Core.Entities
+namespace Verdure.Infrastructure
 {
-    public abstract class BaseEntity
+    public class IArticleRepository
     {
-        public virtual int Id { get; protected set; }
     }
 }

@@ -6,7 +6,10 @@ namespace Verdure.Core
 {
     public interface IArticleService
     {
-        Task<bool> AddAsync(Article article, CancellationToken cancellationToken);
-        Task<IReadOnlyCollection<Article>> ListAsync(int pi = 1, int ps = 10, CancellationToken cancellationToken = default);
+        Task<Article> AddAsync(Article article, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(string id, CancellationToken cancellationToken);
+        Task<Article> UpdateAsync(Article article, CancellationToken cancellationToken);
+        Task<IEnumerable<Article>> GetListAsync(QueryRequest request, CancellationToken cancellationToken);
+        Task<Article> ImportArticleAsync(CancellationToken cancellationToken);
     }
 }
