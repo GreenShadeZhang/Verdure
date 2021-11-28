@@ -27,6 +27,11 @@ namespace Verdure.Infrastructure
             throw new System.NotImplementedException();
         }
 
+        public Task<Article> GetAsync(string id, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public Task<IEnumerable<Article>> GetListAsync(QueryRequest request, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
