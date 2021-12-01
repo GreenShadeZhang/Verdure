@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GreenShade.Blog.Domain\GreenShade.Blog.Domain.csproj" />
     <ProjectReference Include="..\GreenShade.DataAccess\GreenShade.Blog.DataAccess.csproj" />
   </ItemGroup>
 

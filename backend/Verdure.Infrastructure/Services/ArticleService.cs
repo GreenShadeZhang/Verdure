@@ -19,22 +19,22 @@ namespace Verdure.Infrastructure
 
         public Task<Article> AddAsync(Article article, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return _repository.AddAsync(article, cancellationToken);
         }
 
         public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return _repository.DeleteAsync(id, cancellationToken);
         }
 
         public Task<Article> GetAsync(string id, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return _repository.GetAsync(id, cancellationToken);
         }
 
         public Task<IEnumerable<Article>> GetListAsync(QueryRequest request, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return _repository.GetListAsync(request, cancellationToken);
         }
 
         public Task<Article> ImportArticleAsync(CancellationToken cancellationToken)
@@ -68,13 +68,12 @@ namespace Verdure.Infrastructure
                     article.Title = title;
                 }
             }
-            //to do:
-            return null;
+            return _repository.ImportArticleAsync(article, cancellationToken);
         }
 
         public Task<Article> UpdateAsync(Article article, CancellationToken cancellationToken)
         {
-            throw new System.NotImplementedException();
+            return _repository.UpdateAsync(article, cancellationToken);
         }
     }
 }

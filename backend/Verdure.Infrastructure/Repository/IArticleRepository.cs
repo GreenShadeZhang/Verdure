@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
+using Verdure.Core;
 
 namespace Verdure.Infrastructure
 {
-    public class IArticleRepository
+    public interface IArticleRepository
     {
+        Task<Article> AddAsync(Article article, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(string id, CancellationToken cancellationToken);
+        Task<Article> UpdateAsync(Article article, CancellationToken cancellationToken);
+        Task<Article> GetAsync(string id, CancellationToken cancellationToken);
+        Task<IEnumerable<Article>> GetListAsync(QueryRequest request, CancellationToken cancellationToken);
+        Task<Article> ImportArticleAsync(Article article, CancellationToken cancellationToken);
     }
 }
