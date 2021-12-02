@@ -13,6 +13,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.UseMongoDbPersistence(configureOptions =>
+{
+    var config = builder.Configuration.GetSection("MongoConnectString");
+
+    config.Bind(configureOptions);
+});
+
 builder.Services.AddScoped<IArticleService, ArticleService>();
 
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();

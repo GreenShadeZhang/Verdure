@@ -26,6 +26,13 @@ namespace Verdure.Api.Controllers
             return this.Ok(ret);
         }
 
+        [HttpPost]
+        public Task<Article> AddAsync(Article article)
+        {
+            return _articleService.AddAsync(article, CancellationToken.None);
+        }
+
+
         [HttpGet]
         public Task<Article> GetAsync(string id)
         {
