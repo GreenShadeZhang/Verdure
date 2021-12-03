@@ -11,14 +11,19 @@ namespace Verdure.Infrastructure
         private readonly IArticleRepository _repository;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public ArticleService(IArticleRepository repository, IHttpContextAccessor contextAccessor)
+        private readonly IIdGenerator _idGenerator;
+
+        public ArticleService(IArticleRepository repository, IHttpContextAccessor contextAccessor,IIdGenerator idGenerator)
         {
             _repository = repository;
             _contextAccessor = contextAccessor;
+            _idGenerator = idGenerator;
         }
 
         public Task<Article> AddAsync(Article article, CancellationToken cancellationToken)
         {
+            article.Id = _idGenerator.Generate();
+
             return _repository.AddAsync(article, cancellationToken);
         }
 

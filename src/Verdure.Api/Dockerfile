@@ -8,6 +8,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["Verdure.Api/Verdure.Api.csproj", "Verdure.Api/"]
+COPY ["Verdure.Infrastructure/Verdure.Infrastructure.csproj", "Verdure.Infrastructure/"]
+COPY ["Verdure.Core/Verdure.Core.csproj", "Verdure.Core/"]
+COPY ["Verdure.Data.Mongo/Verdure.Data.Mongo.csproj", "Verdure.Data.Mongo/"]
 RUN dotnet restore "Verdure.Api/Verdure.Api.csproj"
 COPY . .
 WORKDIR "/src/Verdure.Api"

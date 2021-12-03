@@ -20,6 +20,8 @@ builder.Services.UseMongoDbPersistence(configureOptions =>
     config.Bind(configureOptions);
 });
 
+builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
+
 builder.Services.AddScoped<IArticleService, ArticleService>();
 
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();

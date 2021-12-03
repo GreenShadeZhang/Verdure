@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Data.Mongo", "Verdu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Verdure.Api", "Verdure.Api\Verdure.Api.csproj", "{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{940D008A-A1B6-48EE-90FD-C6D1DD01BEA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Verdure.UI.Blazor", "..\Verdure.UI.Blazor\Verdure.UI.Blazor.csproj", "{CCC0B42F-ED66-4C98-89F0-BB2145A248EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{157DF7AD-AA44-4BB6-B4A4-6CFF5C407024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{940D008A-A1B6-48EE-90FD-C6D1DD01BEA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{940D008A-A1B6-48EE-90FD-C6D1DD01BEA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{940D008A-A1B6-48EE-90FD-C6D1DD01BEA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{940D008A-A1B6-48EE-90FD-C6D1DD01BEA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCC0B42F-ED66-4C98-89F0-BB2145A248EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC0B42F-ED66-4C98-89F0-BB2145A248EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC0B42F-ED66-4C98-89F0-BB2145A248EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC0B42F-ED66-4C98-89F0-BB2145A248EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
