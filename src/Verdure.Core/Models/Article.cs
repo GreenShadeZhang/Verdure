@@ -17,6 +17,10 @@ namespace Verdure.Core
         /// </summary>
         public string Content { get; set; }
         /// <summary>
+        /// 描述
+        /// </summary>
+        public string Desc { get; set; }
+        /// <summary>
         /// 标签
         /// </summary>
         public string Tags { get; set; }

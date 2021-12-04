@@ -44,6 +44,15 @@ namespace Verdure.Data.Mongo
             return result.FirstOrDefault();
         }
 
+        public async Task<Article> GetByTitleAsync(string title, CancellationToken cancellationToken)
+        {
+            var filter = Builders<Article>.Filter.Where(a => a.Title == title);
+
+            var result = await _context.Articles.FindAsync(filter, null, cancellationToken);
+
+            return result.FirstOrDefault();
+        }
+
         public Task<IEnumerable<Article>> GetListAsync(QueryRequest request, CancellationToken cancellationToken)
         {
             Expression<Func<Article, bool>> expression = null;

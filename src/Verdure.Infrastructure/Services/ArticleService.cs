@@ -13,18 +13,25 @@ namespace Verdure.Infrastructure
 
         private readonly IIdGenerator _idGenerator;
 
-        public ArticleService(IArticleRepository repository, IHttpContextAccessor contextAccessor,IIdGenerator idGenerator)
+        public ArticleService(IArticleRepository repository, IHttpContextAccessor contextAccessor, IIdGenerator idGenerator)
         {
             _repository = repository;
             _contextAccessor = contextAccessor;
             _idGenerator = idGenerator;
         }
 
-        public Task<Article> AddAsync(Article article, CancellationToken cancellationToken)
+        public async Task<Article> AddAsync(Article article, CancellationToken cancellationToken)
         {
             article.Id = _idGenerator.Generate();
 
-            return _repository.AddAsync(article, cancellationToken);
+            var ret = await _repository.GetByTitleAsync(article.Title, cancellationToken);
+
+            if (ret != null && !string.IsNullOrEmpty(ret.Title))
+            {
+                return await _repository.AddAsync(article, cancellationToken);
+            }
+
+            return null;
         }
 
         public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken)
