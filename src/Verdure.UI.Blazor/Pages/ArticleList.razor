@@ -1,4 +1,4 @@
-﻿@page "/counter"
+﻿@page "/article-list"
 @using Verdure.Core
 @inject HttpClient Http
 <PageTitle>Blog List</PageTitle>
@@ -12,7 +12,7 @@ else
     <div class="list-group">
         @foreach (var article in articles)
         {
-            <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+            <a href="article-detail/@article.Id" class="list-group-item list-group-item-action" aria-current="true">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">@article.Title</h5>
                     <small>3 days ago</small>
@@ -28,8 +28,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Http.BaseAddress = new Uri("https://localhost:7010");
-
         articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList");
     }
 }

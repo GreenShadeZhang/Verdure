@@ -18,7 +18,7 @@ else
                     <div class="card-body">
                         <h5 class="card-title">@article.Title</h5>
                         <p class="card-text">@article.Content</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a href="article-detail/@article.Id" class="btn btn-primary">Go somewhere</a>
                     </div>
                 </div>
             </div>
@@ -31,8 +31,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        Http.BaseAddress = new Uri("https://localhost:7010");
-
         articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList");
     }
 }
