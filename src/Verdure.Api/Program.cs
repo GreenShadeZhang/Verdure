@@ -26,6 +26,16 @@ builder.Services.AddScoped<IArticleService, ArticleService>();
 
 builder.Services.AddScoped<IArticleRepository, ArticleRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(options =>
+    {
+        options.AllowAnyHeader();
+        options.AllowAnyMethod();
+        options.AllowAnyOrigin();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +49,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseRouting();
+app.UseCors();
 app.MapControllers();
 
 app.Run();
