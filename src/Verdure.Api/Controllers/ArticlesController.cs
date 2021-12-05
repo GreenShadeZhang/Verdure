@@ -39,7 +39,7 @@ namespace Verdure.Api.Controllers
             return _articleService.GetAsync(id, CancellationToken.None);
         }
 
-        [HttpGet]
+        [HttpPost]
         public Task<Article> ImportArticleAsync()
         {
             return _articleService.ImportArticleAsync(CancellationToken.None);

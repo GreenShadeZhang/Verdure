@@ -28,6 +28,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList");
+        articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList?PageIndex=1&PageSize=100");
     }
 }

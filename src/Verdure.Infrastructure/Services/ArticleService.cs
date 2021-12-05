@@ -51,7 +51,10 @@ namespace Verdure.Infrastructure
 
         public Task<Article> ImportArticleAsync(CancellationToken cancellationToken)
         {
-            var article = new Article();
+            var article = new Article
+            {
+                Id = _idGenerator.Generate()
+            };
 
             var file = _contextAccessor.HttpContext.Request?.Form?.Files["id"];
 
