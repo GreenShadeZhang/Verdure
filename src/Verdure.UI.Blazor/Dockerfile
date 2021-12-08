@@ -1,41 +1,23 @@
-FROM node:14.18.1 as builder
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-WORKDIR /code
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["Verdure.UI.Blazor/Verdure.UI.Blazor.csproj", "Verdure.UI.Blazor/"]
+COPY ["Verdure.Core/Verdure.Core.csproj", "Verdure.Core/"]
+RUN dotnet restore "Verdure.UI.Blazor/Verdure.UI.Blazor.csproj"
+COPY . .
+WORKDIR "/src/Verdure.UI.Blazor"
+RUN dotnet build "Verdure.UI.Blazor.csproj" -c Release -o /app/build
 
-ADD VClient/package.json /code
-
-RUN npm config set metrics-registry="https://registry.npmjs.org/"
-RUN npm config set registry="https://registry.npmjs.org/"
-RUN npm config set proxy="http://172.25.0.88:80/"
-
-#ENV http_proxy http://172.25.0.88:80
-
-#ENV https_proxy http://172.25.0.88:80
-
-#RUN npm install -g npm@8.0.0
-
-#RUN npm install -g @vue/cli
-
-#RUN rm -rf node_modules
-
-RUN npm install
-
-ADD VClient/. /code
-
-RUN npm run build
+FROM build AS publish
+RUN dotnet publish "Verdure.UI.Blazor.csproj" -c Release -o /app/publish
 
 FROM nginx
 
 EXPOSE 80
 
-COPY --from=builder code/dist /usr/share/nginx/html/
+COPY --from=publish /app/publish/wwwroot /usr/share/nginx/html/
 
-COPY --from=builder code/nginx/default.conf /etc/nginx/conf.d/default.conf
+#COPY --from=publish /app/publish/default.conf /etc/nginx/conf.d/default.conf
 
 CMD [ "nginx", "-g", "daemon off;"]
-
-# FROM nginx
-# COPY ./dist /usr/share/nginx/html/
-# COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
-# EXPOSE 80
-# CMD ["nginx","-g","daemon off;"]

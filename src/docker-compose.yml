@@ -9,3 +9,10 @@ services:
 
   mongodb:
     image: mongo
+
+  verdure.ui.blazor:
+    image: ${DOCKER_REGISTRY-}verdureuiblazor
+    build:
+      context: .
+      dockerfile: Verdure.UI.Blazor/Dockerfile
+
