@@ -1,0 +1,111 @@
+﻿@page "/article-detail/{id}"
+@using System.Net.Http.Headers
+@using Verdure.Core
+@inject HttpClient Http
+<h3>ArticleDetail</h3>
+
+<MudText Typo="Typo.h6">MudBlazor is @Text</MudText>
+
+<MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ButtonOnClick">@ButtonText</MudButton>
+
+<MudText Typo="Typo.h3">My markdown</MudText>
+
+<MudMarkdown Value="@article?.Content" />
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudTextField @bind-Value="TextValue" Label="Title" Variant="Variant.Text"></MudTextField>
+    </MudItem>
+</MudGrid>
+
+<label style="
+        box-shadow: 0 2px 7px #4caf50;
+        display: inline-flex;
+        width: 150px;
+        justify-content: space-around;
+        border-radius: 2em;
+        color: white;
+        border:2px solid;
+        cursor: pointer;
+        align-items: center;
+        padding:16px;
+        background-color: #4caf50;"
+       for="fileInput2">
+    Upload <MudIcon Icon="@Icons.Filled.CloudUpload" />
+</label>
+
+<InputFile id="fileInput2" OnChange="UploadFiles" hidden />
+
+@if (files != null)
+{
+    <MudList>
+        @foreach (var file in files)
+        {
+            <MudListItem Icon="@Icons.Filled.AttachFile">
+                @file.Name <code>@file.Size bytes</code>
+            </MudListItem>
+        }
+    </MudList>
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+    public string Text { get; set; } = "????";
+    public string ButtonText { get; set; } = "Click Me";
+    public int ButtonClicked { get; set; }
+
+    public string TextValue { get; set; } = "test";
+
+    private string Value { get; } = "text *italics* and **bold**";
+
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+
+    long maxFileSize = 1024 * 1024 * 15;
+
+    private int maxAllowedFiles = 3;
+
+    private Article? article;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var url = $"/api/Articles/Get?id={Id}";
+
+        article = await Http.GetFromJsonAsync<Article>(url);
+    }
+
+    private void UploadFiles(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            files.Add(file);
+        }
+    }
+
+    async Task ButtonOnClick()
+    {
+        ButtonClicked += 1;
+        Text = $"Awesome x {ButtonClicked}";
+        ButtonText = "Click Me Again";
+
+        //TODO upload the files to the server
+
+        using var content = new MultipartFormDataContent();
+
+        var fileContent = new StreamContent(files[0].OpenReadStream(maxFileSize));
+
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+
+        content.Add(
+            content: fileContent,
+            name: "\"id\"",
+            fileName: files[0].Name);
+
+        content.Add(
+        content: new StringContent(TextValue),
+        name: "\"title\"");
+
+        var response = await Http.PostAsync("/api/Articles/ImportArticle", content);
+    }
+}
+
