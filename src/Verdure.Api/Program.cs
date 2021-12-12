@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Verdure.Core;
 using Verdure.Data.Mongo;
 using Verdure.Infrastructure;
@@ -18,6 +20,16 @@ builder.Services.UseMongoDbPersistence(configureOptions =>
     var config = builder.Configuration.GetSection("MongoConnectString");
 
     config.Bind(configureOptions);
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+{
+    opt.Authority = "https://login.microsoftonline.com/common//v2.0";
+
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateAudience = false
+    };
 });
 
 builder.Services.AddSingleton<IIdGenerator, IdGenerator>();
@@ -47,10 +59,12 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseRouting();
 app.UseCors();
 app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();
+
+
 
 app.Run();

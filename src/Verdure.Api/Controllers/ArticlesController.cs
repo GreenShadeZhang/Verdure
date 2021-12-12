@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Verdure.Core;
 
 namespace Verdure.Api.Controllers
@@ -39,6 +40,7 @@ namespace Verdure.Api.Controllers
             return _articleService.GetAsync(id, CancellationToken.None);
         }
 
+        [Authorize]
         [HttpPost]
         public Task<Article> ImportArticleAsync()
         {

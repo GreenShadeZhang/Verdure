@@ -1,7 +1,9 @@
 ﻿@page "/article-detail/{id}"
 @using System.Net.Http.Headers
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @using Verdure.Core
 @inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 <h3>ArticleDetail</h3>
 
 <MudText Typo="Typo.h6">MudBlazor is @Text</MudText>
@@ -105,7 +107,18 @@
         content: new StringContent(TextValue),
         name: "\"title\"");
 
-        var response = await Http.PostAsync("/api/Articles/ImportArticle", content);
+         try
+        {
+            var client = ClientFactory.CreateClient("WebAPI");
+
+           var response = await client.PostAsync("/api/Articles/ImportArticle", content);
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
+
+        //var response = await Http.PostAsync("/api/Articles/ImportArticle", content);
     }
 }
 
