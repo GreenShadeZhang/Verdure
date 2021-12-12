@@ -1,4 +1,4 @@
-name: Build verdure-blazor-ui:latest
+name: Build verdure-api:latest
 on:
   workflow_dispatch:
   push:
@@ -31,7 +31,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            gilzhang/verdure-blazor-ui
+            gilzhang/verdure-api
           flavor: |
             latest=true
           # generate Docker tags based on the following events/attributes
@@ -49,11 +49,10 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: ./src
-          file: ./src/Verdure.UI.Blazor/Dockerfile
+          file: ./src/Verdure.Api/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-        
