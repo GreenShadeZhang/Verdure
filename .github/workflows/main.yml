@@ -31,7 +31,7 @@ jobs:
         with:
           # list of Docker images to use as base name for tags
           images: |
-            gilzhang/verdure-blaor-ui
+            gilzhang/verdure-blazor-ui
           flavor: |
             latest=true
           # generate Docker tags based on the following events/attributes
