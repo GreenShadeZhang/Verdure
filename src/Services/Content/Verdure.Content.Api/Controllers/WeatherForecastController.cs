@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Verdure.Api.Controllers
+namespace Verdure.Content.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

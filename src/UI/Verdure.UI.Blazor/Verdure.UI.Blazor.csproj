@@ -8,6 +8,7 @@
     <UserSecretsId>f6f6b0a7-f1ad-4e8a-8973-a9528ab50170</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Verdure.Core\Verdure.Core.csproj" />
+    <ProjectReference Include="..\..\Services\Content\Verdure.Core\Verdure.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  verdure.content.api:
+    image: ${DOCKER_REGISTRY-}verdurecontentapi
+    build:
+      context: .
+      dockerfile: src/Services/Content/Verdure.Content.Api/Dockerfile
+
+  mongodb:
+    image: mongo
+
+  verdure.ui.blazor:
+    image: ${DOCKER_REGISTRY-}verdureuiblazor
+    build:
+      context: .
+      dockerfile: src/UI/Verdure.UI.Blazor/Dockerfile
+
+
+  verdure.reviews.api:
+    image: ${DOCKER_REGISTRY-}verdurereviewsapi
+    build:
+      context: .
+      dockerfile: src/Services/Reviews/Verdure.Reviews.Api/Dockerfile
+
+
+  verdure.admin.api:
+    image: ${DOCKER_REGISTRY-}verdureadminapi
+    build:
+      context: .
+      dockerfile: src/Services/Admin/Verdure.Admin.Api/Dockerfile
+

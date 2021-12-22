@@ -2,8 +2,8 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Verdure.UI.Blazor/Verdure.UI.Blazor.csproj", "Verdure.UI.Blazor/"]
-COPY ["Verdure.Core/Verdure.Core.csproj", "Verdure.Core/"]
+COPY ["src/UI/Verdure.UI.Blazor/Verdure.UI.Blazor.csproj", "Verdure.UI.Blazor/"]
+COPY ["src/Services/Content/Verdure.Core/Verdure.Core.csproj", "Verdure.Core/"]
 RUN dotnet restore "Verdure.UI.Blazor/Verdure.UI.Blazor.csproj"
 COPY . .
 WORKDIR "/src/Verdure.UI.Blazor"

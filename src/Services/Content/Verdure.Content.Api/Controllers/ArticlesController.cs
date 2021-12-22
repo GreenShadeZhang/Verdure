@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Verdure.Core;
 
-namespace Verdure.Api.Controllers
+namespace Verdure.Content.Api.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]

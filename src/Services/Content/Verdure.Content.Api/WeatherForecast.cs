@@ -1,4 +1,4 @@
-namespace Verdure.Api
+namespace Verdure.Content.Api
 {
     public class WeatherForecast
     {
