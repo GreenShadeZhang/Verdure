@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Verdure.Common;
 using Verdure.Core;
 
 namespace Verdure.Infrastructure
@@ -28,10 +29,10 @@ namespace Verdure.Infrastructure
 
             if (ret != null && !string.IsNullOrEmpty(ret.Title))
             {
-                return await _repository.AddAsync(article, cancellationToken);
+                return article;
             }
 
-            return null;
+            return await _repository.AddAsync(article, cancellationToken);
         }
 
         public Task<bool> DeleteAsync(string id, CancellationToken cancellationToken)

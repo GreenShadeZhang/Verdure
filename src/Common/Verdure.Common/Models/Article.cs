@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Verdure.Core
+namespace Verdure.Common
 {
     public class Article
     {

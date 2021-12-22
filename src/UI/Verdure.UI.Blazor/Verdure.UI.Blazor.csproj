@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Services\Content\Verdure.Core\Verdure.Core.csproj" />
+    <ProjectReference Include="..\..\Common\Verdure.Common\Verdure.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

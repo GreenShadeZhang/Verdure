@@ -13,6 +13,20 @@
         "verdure.content.api": "StartDebugging",
         "verdure.reviews.api": "StartDebugging"
       }
+    },
+    "api-server": {
+      "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "verdure.content.api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "mongodb": "StartWithoutDebugging",
+        "verdure.admin.api": "StartDebugging",
+        "verdure.content.api": "StartDebugging",
+        "verdure.reviews.api": "StartDebugging",
+        "verdure.ui.blazor": "DoNotStart"
+      }
     }
   }
 }

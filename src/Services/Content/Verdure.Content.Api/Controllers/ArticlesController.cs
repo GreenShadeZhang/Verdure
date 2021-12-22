@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Verdure.Common;
 using Verdure.Core;
 
 namespace Verdure.Content.Api.Controllers

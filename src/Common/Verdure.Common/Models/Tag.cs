@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Verdure.Core.Models
+namespace Verdure.Common
 {
     public class Tag
     {

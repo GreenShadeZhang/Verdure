@@ -49,7 +49,7 @@ jobs:
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: ./src
-          file: ./src/Verdure.Api/Dockerfile
+          file: ./src/Services/Content/Verdure.Content.Api/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

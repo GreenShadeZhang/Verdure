@@ -1,4 +1,4 @@
-﻿namespace Verdure.Core
+﻿namespace Verdure.Common
 {
     public class Category
     {

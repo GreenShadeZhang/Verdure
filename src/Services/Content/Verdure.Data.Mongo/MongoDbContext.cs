@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Verdure.Common;
 using Verdure.Core;
 
 namespace Verdure.Data.Mongo
