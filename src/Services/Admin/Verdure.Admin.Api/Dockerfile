@@ -8,6 +8,10 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["src/Services/Admin/Verdure.Admin.Api/Verdure.Admin.Api.csproj", "src/Services/Admin/Verdure.Admin.Api/"]
+COPY ["src/Services/Admin/Verdure.Admin.Infrastructure/Verdure.Admin.Infrastructure.csproj", "src/Services/Admin/Verdure.Admin.Infrastructure/"]
+COPY ["src/Services/Admin/Verdure.Admin.Core/Verdure.Admin.Core.csproj", "src/Services/Admin/Verdure.Admin.Core/"]
+COPY ["src/Common/Verdure.Common/Verdure.Common.csproj", "src/Common/Verdure.Common/"]
+COPY ["src/Services/Admin/Verdure.Admin.Data.Mongo/Verdure.Admin.Data.Mongo.csproj", "src/Services/Admin/Verdure.Admin.Data.Mongo/"]
 RUN dotnet restore "src/Services/Admin/Verdure.Admin.Api/Verdure.Admin.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Services/Admin/Verdure.Admin.Api"

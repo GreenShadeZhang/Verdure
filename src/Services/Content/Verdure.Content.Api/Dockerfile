@@ -10,6 +10,7 @@ WORKDIR /src
 COPY ["src/Services/Content/Verdure.Content.Api/Verdure.Content.Api.csproj", "src/Services/Content/Verdure.Content.Api/"]
 COPY ["src/Services/Content/Verdure.Infrastructure/Verdure.Infrastructure.csproj", "src/Services/Content/Verdure.Infrastructure/"]
 COPY ["src/Services/Content/Verdure.Core/Verdure.Core.csproj", "src/Services/Content/Verdure.Core/"]
+COPY ["src/Common/Verdure.Common/Verdure.Common.csproj", "src/Common/Verdure.Common/"]
 COPY ["src/Services/Content/Verdure.Data.Mongo/Verdure.Data.Mongo.csproj", "src/Services/Content/Verdure.Data.Mongo/"]
 RUN dotnet restore "src/Services/Content/Verdure.Content.Api/Verdure.Content.Api.csproj"
 COPY . .

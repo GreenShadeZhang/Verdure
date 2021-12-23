@@ -48,7 +48,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           builder: ${{ steps.buildx.outputs.name }}
-          context: ./src
+          context: ./
           file: ./src/Services/Content/Verdure.Content.Api/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}

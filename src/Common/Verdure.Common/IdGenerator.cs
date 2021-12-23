@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Verdure.Core
+namespace Verdure.Common
 {
-    public interface IIdGenerator
+    public class IdGenerator : IIdGenerator
     {
-        string Generate();
+        public string Generate() => Guid.NewGuid().ToString("N");
     }
 }

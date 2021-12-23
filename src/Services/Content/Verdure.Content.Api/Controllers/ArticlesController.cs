@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Verdure.Common;
 using Verdure.Core;
 
@@ -11,41 +10,27 @@ namespace Verdure.Content.Api.Controllers
     {
         private readonly ILogger<ArticlesController> _logger;
 
-        private readonly IArticleService _articleService;
+        private readonly IArticleService _service;
 
-        public ArticlesController(ILogger<ArticlesController> logger, IArticleService articleService)
+        public ArticlesController(ILogger<ArticlesController> logger, IArticleService service)
         {
             _logger = logger;
 
-            _articleService = articleService;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetListAsync([FromQuery] QueryRequest queryRequest)
         {
-            var ret = await _articleService.GetListAsync(queryRequest, CancellationToken.None);
+            var ret = await _service.GetListAsync(queryRequest, CancellationToken.None);
 
             return this.Ok(ret);
         }
 
-        [HttpPost]
-        public Task<Article> AddAsync(Article article)
-        {
-            return _articleService.AddAsync(article, CancellationToken.None);
-        }
-
-
         [HttpGet]
         public Task<Article> GetAsync(string id)
         {
-            return _articleService.GetAsync(id, CancellationToken.None);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public Task<Article> ImportArticleAsync()
-        {
-            return _articleService.ImportArticleAsync(CancellationToken.None);
+            return _service.GetAsync(id, CancellationToken.None);
         }
     }
 }
