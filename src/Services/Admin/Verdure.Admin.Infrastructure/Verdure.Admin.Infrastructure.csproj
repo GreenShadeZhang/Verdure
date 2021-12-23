@@ -8,6 +8,9 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Dapr.AspNetCore" Version="1.5.0" />
+	</ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Verdure.Admin.Core\Verdure.Admin.Core.csproj" />
   </ItemGroup>

@@ -1,0 +1,22 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: verdure-statestore
+  namespace: verdure
+spec:
+  type: state.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: redis:6379
+  - name: redisPassword
+    secretKeyRef:
+      name: State.RedisPassword
+      key: State.RedisPassword
+  - name: actorStateStore
+    value: "true"
+auth:
+  secretStore: verdure-secretstore
+scopes:
+- verdure-content-api
+- verdure-admin-api
