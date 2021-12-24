@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Verdure.Common
 @inject HttpClient Http
+@inject ArticleService service
 
 <PageTitle>Index</PageTitle>
 
@@ -27,10 +28,11 @@ else
 }
 
 @code {
-    private Article[]? articles;
+    private List<Article>? articles;
 
     protected override async Task OnInitializedAsync()
     {
-        articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList?PageIndex=1&PageSize=100");
+        articles = await service.GetListAsync(new QueryRequest());
+        //articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList?PageIndex=1&PageSize=100");
     }
 }

@@ -4,6 +4,7 @@
 @using Verdure.Common
 @inject HttpClient Http
 @inject IHttpClientFactory ClientFactory
+@inject AdminService service
 <h3>ArticleDetail</h3>
 
 <MudText Typo="Typo.h6">MudBlazor is @Text</MudText>
@@ -107,11 +108,13 @@
         content: new StringContent(TextValue),
         name: "\"title\"");
 
-         try
+        try
         {
-            var client = ClientFactory.CreateClient("WebAPI");
+            //var client = ClientFactory.CreateClient("WebAPI");
 
-           var response = await client.PostAsync("/api/Articles/ImportArticle", content);
+            //var response = await client.PostAsync("/api/Articles/ImportArticle", content);
+
+            var ret = await service.AddAsync(content);
         }
         catch (AccessTokenNotAvailableException exception)
         {

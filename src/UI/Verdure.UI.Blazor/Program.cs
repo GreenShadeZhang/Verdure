@@ -17,6 +17,16 @@ builder.Services.AddHttpClient("WebAPI",
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.Configuration.GetSection("BaseUrl").Value) });
 
+builder.Services.AddHttpClient<ArticleService>(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration.GetSection("ArticleBaseUrl").Value);
+});
+
+builder.Services.AddHttpClient<AdminService>(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration.GetSection("AdminBaseUrl").Value);
+});
+
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
 builder.Services.AddMsalAuthentication(options =>
