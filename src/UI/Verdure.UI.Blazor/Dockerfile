@@ -15,8 +15,8 @@ FROM nginx
 
 EXPOSE 80
 
-COPY --from=publish /app/publish/wwwroot /usr/share/nginx/html/
+COPY --from=publish /app/publish/wwwroot/ /usr/share/nginx/html/
 
-#COPY --from=publish /app/publish/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=publish /app/publish/default.conf /etc/nginx/conf.d/default.conf
 
 CMD [ "nginx", "-g", "daemon off;"]
