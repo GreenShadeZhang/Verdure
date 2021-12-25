@@ -14,7 +14,7 @@ namespace Verdure.UI.Blazor
         }
         public async Task<List<Article>?> GetListAsync(QueryRequest request, CancellationToken cancellationToken = default)
         {
-            var url = $"{_configuration["AdminPrefix"]}/api/Articles/GetList?PageIndex=1&PageSize=100";
+            var url = $"{_configuration["ArticlePrefix"]}/api/Articles/GetList?PageIndex=1&PageSize=100";
 
             return await _httpClient.GetFromJsonAsync<List<Article>>(url);
         }
