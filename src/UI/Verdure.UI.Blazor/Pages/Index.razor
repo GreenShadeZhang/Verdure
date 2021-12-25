@@ -33,6 +33,5 @@ else
     protected override async Task OnInitializedAsync()
     {
         articles = await service.GetListAsync(new QueryRequest());
-        //articles = await Http.GetFromJsonAsync<Article[]>("/api/Articles/GetList?PageIndex=1&PageSize=100");
     }
 }
