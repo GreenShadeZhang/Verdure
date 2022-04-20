@@ -10,6 +10,7 @@ namespace Verdure.UI.Blazor
           IConfiguration configuration)
           : base(provider, navigationManager)
         {
+
             var url = $"{configuration.GetSection("BaseUrl").Value}/api/Articles/ImportArticle";
 
             ConfigureHandler(
