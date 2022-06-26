@@ -1,0 +1,80 @@
+version: '3.4'
+
+services:
+  verdure.content.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - MongoConnectString__ConnectionString=mongodb://mongodb
+      - MongoConnectString__DatabaseName=Verdure
+    ports:
+      - "7010:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  verdure-content-api-dapr:
+    command: ["./daprd",
+      "-app-id", "verdure-content-api",
+      "-app-port", "80",
+      "-components-path", "/components",
+      "-config", "/configuration/verdure-config.yaml"
+      ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
+
+  mongodb:
+    ports:
+      - "27018:27017"
+
+  zipkin:
+    ports:
+      - "5411:9411"
+  redis:
+    image: redis:alpine
+    ports:
+      - "5379:6379"
+
+  verdure.ui.blazor:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "80:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  verdure.reviews.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "7012:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  verdure.admin.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - MongoConnectString__ConnectionString=mongodb://mongodb
+      - MongoConnectString__DatabaseName=Verdure
+    ports:
+      - "7011:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  verdure-admin-api-dapr:
+    command: ["./daprd",
+      "-app-id", "verdure-admin-api",
+      "-app-port", "80",
+      "-components-path", "/components",
+      "-config", "/configuration/verdure-config.yaml"
+      ]
+    volumes:
+      - "./dapr/components/:/components"
+      - "./dapr/configuration/:/configuration"
