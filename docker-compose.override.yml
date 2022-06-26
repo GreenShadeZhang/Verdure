@@ -36,12 +36,16 @@ services:
     ports:
       - "5379:6379"
 
+  verdure.ui.blazor.product:
+    ports:
+      - "80:80"
+
   verdure.ui.blazor:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "80:80"
+      - "7013:80"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

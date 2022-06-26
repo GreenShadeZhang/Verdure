@@ -47,3 +47,6 @@ services:
     depends_on:
       - verdure.admin.api
 
+  verdure.ui.blazor.product:
+    image: gilzhang/verdure-blazor-ui
+
